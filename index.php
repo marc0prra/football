@@ -1,7 +1,8 @@
 <?php
 class Player
 {
-    private int $id;
+    // --- Attributs ---
+    private ?int $id;
     private string $firstname;
     private string $lastname;
     private DateTime $birthdate;
@@ -49,7 +50,8 @@ class Team
         $this->name = $name;
     }
 
-    public function getId():int{
+    public function getId(): int
+    {
         return $this->id;
     }
 }
