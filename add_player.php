@@ -41,14 +41,15 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 ?>
 
 <form action="" method="post">
-    <label for="first_name">First Name:</label>
+    <label for="first_name">Prénom :</label>
     <input type="text" id="first_name" name="first_name" required><br>
-    <label for="last_name">Last Name:</label>
+    <label for="last_name">Nom de famille :</label>
     <input type="text" id="last_name" name="last_name" required><br>
-    <label for="birthdate">Birth date</label>
+    <label for="birthdate">Date de naissance :</label>
     <input type="Date" id="birthdate" name="birthdate" required><br>
-    <label for="picture">Picture</label>
+    <label for="picture" placeholder="includes/images/">Photo </label>
     <input type="text" id="picture" name="picture" required><br>
+    
     <button type="submit">Add Player</button>
 
 </form>

@@ -1,0 +1,1 @@
+<?php //Objectif : Ajout d'équipes dans la BDD

@@ -57,7 +57,7 @@ CREATE TABLE `opposing_club` (
 
 CREATE TABLE `player` (
   `id` int(11) NOT NULL,
-  `fisrtname` varchar(255) NOT NULL,
+  `firstname` varchar(255) NOT NULL,
   `lastname` varchar(255) NOT NULL,
   `birthdate` datetime NOT NULL,
   `picture` varchar(255) NOT NULL

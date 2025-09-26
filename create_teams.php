@@ -1,0 +1,1 @@
+<?php //Objectif : Création des équipes "player_has_team"
