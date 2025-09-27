@@ -6,12 +6,11 @@ class Player
     private DateTime $birthdate;
     private string $picture;
 
-    public function __construct($id, $firstname, $lastname, $birthdate, $picture)
+    public function __construct($firstname, $lastname, DateTime $birthdate, $picture)
     {
-        $this->id = $id;
         $this->firstname = $firstname;
         $this->lastname = $lastname;
-        $this->birthdate = new DateTime($birthdate);
+        $this->birthdate = $birthdate;
         $this->picture = $picture;
     }
 
