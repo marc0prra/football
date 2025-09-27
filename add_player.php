@@ -6,9 +6,14 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $infos = returnArray($_POST);
     if (!isset($infos["errors"])) {
         //Tout les champs sont remplis ? On peut insérer en BDD
-        $player = new Player($infos["first_name"], $infos["last_name"], new DateTime($infos["birthdate"]), 
-        $infos["picture"] );
+        $player = new Player(
+            $infos["first_name"],
+            $infos["last_name"],
+            new DateTime($infos["birthdate"]),
+            $infos["picture"]
+        );
         insertPlayer($player);
+        $infos = "";
     }
 }
 ?>
@@ -22,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     <input type="date" id="birthdate" name="birthdate" required><br>
     <label for="picture" placeholder="includes/images/">Photo </label>
     <input type="text" id="picture" name="picture" required><br>
-    
+
     <button type="submit">Add Player</button>
 
 </form>

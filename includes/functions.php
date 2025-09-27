@@ -27,20 +27,78 @@ function insertTeam(Team $team): void
 
 }
 
-function returnArray(array $infos)
+function insertPlayerHasTeam(PlayerHasTeam $playerHasTeam)
+{
+    global $connexion;
+    $playerId = $playerHasTeam->getPlayer();
+    $teamId = $playerHasTeam->getTeam();
+    $hasTeamRole = $playerHasTeam->getRole();
+
+    $requeteInsertion = $connexion->prepare('INSERT INTO player_has_team (player_id, team_id, `role`) VALUES (:player, :team, :roles)');
+    $requeteInsertion->bindParam('player', $playerId);
+    $requeteInsertion->bindParam('team', $teamId);
+    $requeteInsertion->bindParam('roles', $hasTeamRole);
+    $requeteInsertion->execute();
+}
+
+function returnArray(array $infos): array
 {
     $errors = "";
     foreach ($infos as $keyInfo => $info) {
         $info = trim($info);
-    }
-    if (empty($infos)) {
-        $infos["errors"][$keyInfo] = "Les champs obligatoires doivent être remplis";
-    } else {
-        foreach ($infos as $keyInfo => $info) {
-            if (($info) == "") {
-                $infos["errors"][$keyInfo] = "Veuillez renseigner " . $keyInfo;
-            }
+        if (($info) == "") {
+            $infos["errors"][$keyInfo] = "Veuillez renseigner " . $keyInfo;
         }
     }
     return $infos;
+}
+
+function selectPlayers(): array
+{
+    global $connexion;
+    $requeteSelection = $connexion->prepare(
+        'SELECT * FROM player p 
+            LEFT JOIN player_has_team pht ON pht.player_id = p.id'
+    );
+    $requeteSelection->execute();
+    $thePlayers = $requeteSelection->fetchAll(PDO::FETCH_ASSOC);
+
+    $counter = 1;
+    $players = [];
+
+    foreach ($thePlayers as $thePlayer) {
+        $players[$counter] = new Player(
+            $thePlayer["firstname"],
+            $thePlayer["lastname"],
+            $thePlayer["birthdate"],
+            $thePlayer["picture"],
+            id: $thePlayer["id"]
+        );
+        $counter++;
+    }
+    return $players;
+}
+
+function selectTeams(): array
+{
+    global $connexion;
+    $requeteSelection = $connexion->prepare(
+        'SELECT * FROM team t
+            LEFT JOIN player_has_team pht ON pht.team_id = t.id
+            WHERE pht.team_id IS NULL '
+    );
+    $requeteSelection->execute();
+    $theTeams = $requeteSelection->fetchAll(PDO::FETCH_ASSOC);
+
+    $counter = 1;
+    $teams = [];
+
+    foreach ($theTeams as $theTeam) {
+        $teams[$counter] = new Team(
+            $theTeam["name"],
+            id: $theTeam["id"]
+        );
+        $counter++;
+    }
+    return $teams;
 }
