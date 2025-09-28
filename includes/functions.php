@@ -27,6 +27,19 @@ function insertTeam(Team $team): void
 
 }
 
+function insertClub(OpposingClub $opposingClub): void
+{
+    global $connexion;
+    $city = $opposingClub->getCity();
+    $adress = $opposingClub->getAddress();
+
+    $requeteInsertion = $connexion->prepare('INSERT INTO opposing_club (adress, city) VALUES (:adress, :city)');
+    $requeteInsertion->bindParam('adress', $adress);
+    $requeteInsertion->bindParam('city', $city);
+    $requeteInsertion->execute();
+
+}
+
 function insertPlayerHasTeam(PlayerHasTeam $playerHasTeam)
 {
     global $connexion;
@@ -84,8 +97,7 @@ function selectTeams(): array
     global $connexion;
     $requeteSelection = $connexion->prepare(
         'SELECT * FROM team t
-            LEFT JOIN player_has_team pht ON pht.team_id = t.id
-            WHERE pht.team_id IS NULL '
+            LEFT JOIN player_has_team pht ON pht.team_id = t.id'
     );
     $requeteSelection->execute();
     $theTeams = $requeteSelection->fetchAll(PDO::FETCH_ASSOC);
@@ -101,4 +113,26 @@ function selectTeams(): array
         $counter++;
     }
     return $teams;
+}
+
+function selectClubs(): array
+{
+    global $connexion;
+    $requeteSelection = $connexion->prepare(
+        'SELECT * FROM opposing_club'
+    );
+    $requeteSelection->execute();
+    $theClubs = $requeteSelection->fetchAll(PDO::FETCH_ASSOC);
+
+    $counter = 1;
+    $clubs = [];
+
+    foreach ($theClubs as $theClub) {
+        $clubs[$counter] = new OpposingClub(
+            $theClub["adress"],
+             $theClub["city"]
+        );
+        $counter++;
+    }
+    return $clubs;
 }

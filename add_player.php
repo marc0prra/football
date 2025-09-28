@@ -1,4 +1,5 @@
 <?php
+session_start();
 include_once("includes/header.php");
 include_once("index.php");
 // Vérifier qu'on est en POST
@@ -7,32 +8,51 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     if (!isset($infos["errors"])) {
         //Tout les champs sont remplis ? On peut insérer en BDD
         $player = new Player(
-            $infos["first_name"],
-            $infos["last_name"],
-            new DateTime($infos["birthdate"]),
-            $infos["picture"]
+            $infos["prenom"],
+            $infos["nom_de_famille"],
+            new DateTime($infos["date_de_naissance"]),
+            $infos["photo"]
         );
         insertPlayer($player);
         $infos = "";
+        $_SESSION['success'] = "Le joueur a bien été ajouté !";
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit;
     }
 }
 ?>
+<?php if (isset($_SESSION['success'])): ?>
+    <div class="success">
+        <?php
+        echo $_SESSION['success'];
+        unset($_SESSION['success']);
+        ?>
+    </div>
+<?php endif; ?>
 
 <form action="" method="post">
-    <label for="first_name">Prénom :</label>
-    <input type="text" id="first_name" name="first_name" required><br>
-    <label for="last_name">Nom de famille :</label>
-    <input type="text" id="last_name" name="last_name" required><br>
-    <label for="birthdate">Date de naissance :</label>
-    <input type="date" id="birthdate" name="birthdate" required><br>
-    <label for="picture" placeholder="includes/images/">Photo </label>
-    <input type="text" id="picture" name="picture" required><br>
+    <p class="error"><?php echo isset($infos["errors"]["prenom"]) ? $infos["errors"]["prenom"] : "" ?></p>
+    <label for="prenom">Prénom* :</label>
+    <input type="text" id="prenom" name="prenom" required><br>
 
-    <button type="submit">Add Player</button>
+    <p class="error"><?php echo isset($infos["errors"]["nom_de_famille"]) ? $infos["errors"]["nom_de_famille"] : "" ?>
+    </p>
+    <label for="nom_de_famille">nom de famille* :</label>
+    <input type="text" id="nom_de_famille" name="nom_de_famille" required><br>
+
+    <p class="error">
+        <?php echo isset($infos["errors"]["date_de_naissance"]) ? $infos["errors"]["date_de_naissance"] : "" ?></p>
+    <label for="date_de_naissance">Date de naissance* :</label>
+    <input type="date" id="date_de_naissance" name="date_de_naissance" required><br>
+
+    <p class="error"><?php echo isset($infos["errors"]["photo"]) ? $infos["errors"]["photo"] : "" ?></p>
+    <label for="photo" placeholder="includes/images/">Photo* </label>
+    <input type="text" id="photo" name="photo" required><br><br>
+
+    <button type="submit">Ajouter joueur</button>
 
 </form>
 
 <?php
 include_once("includes/footer.php");
-
 ?>
