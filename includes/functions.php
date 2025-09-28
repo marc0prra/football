@@ -81,7 +81,7 @@ function selectPlayers(): array
 
     foreach ($thePlayers as $thePlayer) {
         $players[$counter] = new Player(
-            $thePlayer["firstname"],
+            $thePlayer["fisrtname"],
             $thePlayer["lastname"],
             $thePlayer["birthdate"],
             $thePlayer["picture"],
@@ -130,7 +130,7 @@ function selectClubs(): array
     foreach ($theClubs as $theClub) {
         $clubs[$counter] = new OpposingClub(
             $theClub["adress"],
-             $theClub["city"]
+            $theClub["city"]
         );
         $counter++;
     }
