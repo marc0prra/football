@@ -1,11 +1,163 @@
-.error{
-    color: rgb(159, 13, 13);
-    font-style: italic;
+/************************* CONVENTION CSS *************************/
+body {
+  margin: 0;
+  font-family: "Epilogue", sans-serif;
+  font-family: var(--font-main);
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.6;
+  padding: 2rem;
 }
 
-.success{
-    color: rgb(7, 160, 7);
-    font-size: large;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-main);
+  color: var(--color-primary);
+  margin-bottom: 1rem;
+  letter-spacing: 0.5px;
+}
+
+h1 {
+  font-size: 2.8rem;
+  font-weight: 700;
+  border-bottom: 3px solid var(--color-accent);
+  display: inline-block;
+  padding-bottom: 0.5rem;
+}
+
+h2 {
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+h3 {
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+p {
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+a:hover {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+ul {
+  list-style: none;
+  margin: 1rem 0;
+  padding-left: 1.2rem;
+}
+
+ul li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 0.6rem;
+  font-size: 1rem;
+}
+
+ul li::before {
+  content: "◆";
+  position: absolute;
+  left: 0;
+  color: var(--color-accent);
+  font-size: 0.8rem;
+  top: 0.2rem;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="date"],
+textarea,
+select {
+  width: 96%;
+  padding: 0.8rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: var(--radius);
+  background: #fff;
+  font-family: var(--font-main);
+  font-size: 1rem;
+  transition: all var(--transition);
+  margin-bottom: 1rem;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 8px rgba(191, 164, 111, 0.3);
+  outline: none;
+}
+
+button,
+input[type="submit"],
+a.button {
+  display: inline-block;
+  padding: 0.8rem 1.6rem;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background var(--transition), transform var(--transition);
+}
+
+button:hover,
+input[type="submit"]:hover,
+a.button:hover {
+  background: var(--color-accent);
+  transform: translateY(-2px);
+}
+
+/************************* COULEUR *************************/
+:root {
+  --font-main: "Epilogue", "Inter", sans-serif;
+  --color-bg: #f5f6fa;
+  --color-primary: #0f172a; /* bleu nuit élégant */
+  --color-accent: #bfa46f; /* doré doux pour la “luxury vibe” */
+  --color-text: #333;
+  --radius: 12px;
+  --transition: 0.3s ease;
+}
+
+/************************* infos_player *************************/
+.player {
+  background: #fff;
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.player:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+}
+
+/************************* message *************************/
+
+.error {
+  color: rgb(159, 13, 13);
+  font-style: italic;
+}
+
+.success {
+  color: rgb(7, 160, 7);
+  font-size: large;
 }
 
 .row{

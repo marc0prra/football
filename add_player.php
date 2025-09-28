@@ -30,6 +30,14 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     </div>
 <?php endif; ?>
 
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Ajouter un joueur</title>
+</head>
+
 <form action="" method="post">
     <p class="error"><?php echo isset($infos["errors"]["prenom"]) ? $infos["errors"]["prenom"] : "" ?></p>
     <label for="prenom">Prénom* :</label>
@@ -41,7 +49,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     <input type="text" id="nom_de_famille" name="nom_de_famille" required><br>
 
     <p class="error">
-        <?php echo isset($infos["errors"]["date_de_naissance"]) ? $infos["errors"]["date_de_naissance"] : "" ?></p>
+        <?php echo isset($infos["errors"]["date_de_naissance"]) ? $infos["errors"]["date_de_naissance"] : "" ?>
+    </p>
     <label for="date_de_naissance">Date de naissance* :</label>
     <input type="date" id="date_de_naissance" name="date_de_naissance" required><br>
 

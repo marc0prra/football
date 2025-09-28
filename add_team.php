@@ -11,6 +11,15 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     }
 }
 ?>
+
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Ajouter une équipe</title>
+</head>
+
 <form action="" method="post">
     <?php if (isset($errors)) {
         foreach ($errors as $error) {
