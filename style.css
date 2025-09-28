@@ -9,6 +9,10 @@ body {
   padding: 2rem;
 }
 
+.gap5{
+    gap: 5vw;
+}
+
 h1,
 h2,
 h3,
@@ -158,4 +162,9 @@ a.button:hover {
 .success {
   color: rgb(7, 160, 7);
   font-size: large;
+}
+
+.row{
+    display: flex;
+    flex-direction: row;
 }

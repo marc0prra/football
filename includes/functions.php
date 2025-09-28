@@ -81,7 +81,7 @@ function selectPlayers(): array
 
     foreach ($thePlayers as $thePlayer) {
         $players[$counter] = new Player(
-            $thePlayer["fisrtname"],
+            $thePlayer["firstname"],
             $thePlayer["lastname"],
             $thePlayer["birthdate"],
             $thePlayer["picture"],
@@ -97,7 +97,7 @@ function selectTeams(): array
     global $connexion;
     $requeteSelection = $connexion->prepare(
         'SELECT * FROM team t
-            LEFT JOIN player_has_team pht ON pht.team_id = t.id'
+            LEFT JOIN player_has_team pht ON pht.team_id = t.id ORDER BY name'
     );
     $requeteSelection->execute();
     $theTeams = $requeteSelection->fetchAll(PDO::FETCH_ASSOC);
