@@ -57,7 +57,7 @@ CREATE TABLE `opposing_club` (
 
 CREATE TABLE `player` (
   `id` int(11) NOT NULL,
-  `fisrtname` varchar(255) NOT NULL,
+  `firstname` varchar(255) NOT NULL,
   `lastname` varchar(255) NOT NULL,
   `birthdate` datetime NOT NULL,
   `picture` varchar(255) NOT NULL
@@ -67,7 +67,7 @@ CREATE TABLE `player` (
 -- Déchargement des données de la table `player`
 --
 
-INSERT INTO `player` (`id`, `fisrtname`, `lastname`, `birthdate`, `picture`) VALUES
+INSERT INTO `player` (`id`, `firstname`, `lastname`, `birthdate`, `picture`) VALUES
 (13, 'Lionel', 'Messi', '1987-06-24 00:00:00', 'messi.jpg'),
 (14, 'Cristiano', 'Ronaldo', '1985-02-05 00:00:00', 'ronaldo.jpg'),
 (15, 'Kylian', 'Mbappé', '1998-12-20 00:00:00', 'mbappe.jpg'),

@@ -1,21 +1,26 @@
 <?php
 class Player
 {
+    private ?int $id;
     private string $firstname;
     private string $lastname;
     private DateTime $birthdate;
     private string $picture;
 
-    public function __construct($id, $firstname, $lastname, $birthdate, $picture)
+    public function __construct($firstname, $lastname, DateTime|string $birthdate, $picture, ?int $id = null)
     {
         $this->id = $id;
         $this->firstname = $firstname;
         $this->lastname = $lastname;
-        $this->birthdate = new DateTime($birthdate);
+        $this->birthdate = $birthdate instanceof DateTime ? $birthdate : new DateTime($birthdate);
         $this->picture = $picture;
     }
 
     // --- Getters ---
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
     public function getFirstname(): string
     {
         return $this->firstname;
