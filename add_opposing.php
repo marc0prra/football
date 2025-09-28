@@ -27,6 +27,14 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     </div>
 <?php endif; ?>
 
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Ajouter un équipe opposante</title>
+</head>
+
 <form action="" method="post">
     <p class="error">
         <?php echo isset($infos["errors"]["ville"]) ? $infos["errors"]["ville"] : "" ?>
