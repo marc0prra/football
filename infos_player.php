@@ -3,22 +3,27 @@ require_once "includes/database.php";
 
 $sql = "
     SELECT 
-        p.id AS player_id,
-        p.fisrtname,
-        p.lastname,
-        DATE(p.birthdate) AS birthdate,
-        t.name AS team_name,
-        m.id AS match_id,
-        m.date AS match_date,
-        m.team_score,
-        m.opponent_score,
-        oc.city AS opponent_city
-    FROM player p
-    LEFT JOIN player_has_team pt ON p.id = pt.player_id 
-    LEFT JOIN team t ON pt.team_id = t.id
-    LEFT JOIN matchs m ON m.team_id = t.id
-    LEFT JOIN opposing_club oc ON m.opposing_club_id = oc.id
-    ORDER BY p.lastname, p.fisrtname, m.date
+    p.id AS player_id,
+    p.firstname,
+    p.lastname,
+    DATE(p.birthdate) AS birthdate,
+    t.name AS team_name,
+    pt.role AS player_role,
+    m.id AS match_id,
+    m.date AS match_date,
+    m.team_score,
+    m.opponent_score,
+    oc.city AS opponent_city
+FROM player p
+LEFT JOIN player_has_team pt 
+    ON p.id = pt.player_id
+LEFT JOIN team t 
+    ON pt.team_id = t.id
+LEFT JOIN matchs m 
+    ON m.team_id = t.id   -- un joueur peut avoir zéro match dans cette équipe
+LEFT JOIN opposing_club oc 
+    ON m.opposing_club_id = oc.id
+ORDER BY p.lastname, p.firstname, t.name, m.date
 "; // LEFT JOIN car on affiche les joueurs qui ont un club mais pas de matchs
 
 
@@ -31,12 +36,23 @@ foreach ($rows as $row) {
     $pid = $row['player_id'];
     if (!isset($players[$pid])) {
         $players[$pid] = [
-            'fisrtname' => $row['fisrtname'],
+            'firstname' => $row['firstname'],
             'lastname' => $row['lastname'],
             'birthdate' => $row['birthdate'],
-            'team' => $row['team_name'],
-            'matches' => []
+            'teams' => [],
+            'matches' => [],
+            'id' => $pid
         ];
+    }
+
+    if ($row['team_name']) {
+        $teamKey = $row['team_name'] . ' - ' . $row['player_role']; // clé unique
+        if (!isset($players[$pid]['teams'][$teamKey])) {
+            $players[$pid]['teams'][$teamKey] = [
+                'name' => $row['team_name'],
+                'role' => $row['player_role']
+            ];
+        }
     }
 
     // ajoute le match uniquement si le joueur a un club et un match
@@ -61,10 +77,22 @@ foreach ($rows as $row) {
     <h1>Infos des Joueurs</h1>
     <?php foreach ($players as $player): ?>
         <div class="player">
-            <h2><?= htmlspecialchars($player['fisrtname'] . " " . $player['lastname']) ?></h2>
+            <h2><?= htmlspecialchars($player['firstname'] . " " . $player['lastname']) ?></h2>
             <p>Date de naissance : <?= htmlspecialchars($player['birthdate']) ?></p>
-            <p>Club : <?= $player['team'] ? htmlspecialchars($player['team']) : "Aucun club" ?></p>
 
+            <?php if (!empty($player['teams'])): ?>
+                <h3>Clubs :</h3>
+                <ul>
+                    <?php foreach ($player['teams'] as $team): ?>
+                        <li>
+                            <?= htmlspecialchars($team['name']) ?>
+                            (Position : <?= htmlspecialchars($team['role']) ?>)
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php else: ?>
+                <p>Club : Aucun club</p>
+            <?php endif; ?>
 
             <?php if (!empty($player['matches'])): ?>
                 <h3>Matchs joués :</h3>
@@ -78,7 +106,8 @@ foreach ($rows as $row) {
                     <?php endforeach; ?>
                 </ul>
             <?php endif; ?>
-            <a href="edit_player.php?id=<?= urlencode($pid) ?>">Modifier</a>
+
+            <a href="edit_player.php?id=<?= urlencode($player["id"]) ?>">Modifier</a>
         </div>
     <?php endforeach; ?>
 </body>
