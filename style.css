@@ -9,6 +9,10 @@ body {
   padding: 2rem;
 }
 
+.gap5{
+    gap: 5vw;
+}
+
 h1,
 h2,
 h3,
