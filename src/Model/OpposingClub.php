@@ -1,4 +1,7 @@
 <?php
+
+namespace src\Model;
+
 class OpposingClub
 {
     private ?int $id;

@@ -1,4 +1,7 @@
 <?php
+
+namespace src\Model;
+
 class PlayerHasTeam
 {
     private string $role; // attaquant, milieu, défenseur, gardien

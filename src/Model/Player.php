@@ -1,4 +1,8 @@
 <?php
+
+namespace src\Model;
+
+
 class Player
 {
     private ?int $id;
