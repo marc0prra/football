@@ -1,6 +1,4 @@
 <?php
-session_start();
-include_once("includes/header.php");
 include_once("index.php");
 // --- Connexion BDD ---
 $pdo = new PDO("mysql:host=localhost;dbname=football;charset=utf8mb4", "root", "");

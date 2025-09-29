@@ -1,0 +1,10 @@
+<?php
+include("../src/Model/Player.php");
+include("../src/Model/Team.php");
+include("../src/Model/PlayerHasTeam.php");
+include("../src/Model/Matchs.php");
+include("../src/Model/OpposingClub.php");
+include("../src/Model/StaffMember.php");
+include("includes/database.php");
+include("../includes/functions.php");
+require_once("includes/header.php");
