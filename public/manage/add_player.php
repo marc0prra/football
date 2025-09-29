@@ -1,7 +1,6 @@
 <?php
-session_start();
-include_once("includes/header.php");
-include_once("index.php");
+include_once("../index.php");
+use src\Model\Player;
 // Vérifier qu'on est en POST
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $infos = returnArray($_POST);
@@ -10,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $player = new Player(
             $infos["prenom"],
             $infos["nom_de_famille"],
-            new DateTime($infos["date_de_naissance"]),
+            $infos["date_de_naissance"],
             $infos["photo"]
         );
         insertPlayer($player);

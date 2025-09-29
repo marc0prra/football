@@ -1,4 +1,10 @@
 <?php
+use src\Model\Player;
+use src\Model\Matchs;
+use src\Model\OpposingClub;
+use src\Model\PlayerHasTeam;
+use src\Model\StaffMember;
+use src\Model\Team;
 function insertPlayer(Player $player): void
 {
     global $connexion;

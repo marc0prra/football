@@ -8,15 +8,15 @@ class Player
     private ?int $id;
     private string $firstname;
     private string $lastname;
-    private DateTime $birthdate;
+    private \DateTime $birthdate;
     private string $picture;
 
-    public function __construct($firstname, $lastname, DateTime|string $birthdate, $picture, ?int $id = null)
+    public function __construct($firstname, $lastname, \DateTime|string $birthdate, $picture, ?int $id = null)
     {
         $this->id = $id;
         $this->firstname = $firstname;
         $this->lastname = $lastname;
-        $this->birthdate = $birthdate instanceof DateTime ? $birthdate : new DateTime($birthdate);
+        $this->birthdate = $birthdate instanceof DateTime ? $birthdate : new \DateTime($birthdate);
         $this->picture = $picture;
     }
 
@@ -33,7 +33,7 @@ class Player
     {
         return $this->lastname;
     }
-    public function getBirthdate(): DateTime
+    public function getBirthdate(): \DateTime
     {
         return $this->birthdate;
     }
