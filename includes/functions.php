@@ -81,7 +81,7 @@ function selectPlayers(): array
 
     foreach ($thePlayers as $thePlayer) {
         $players[$counter] = new Player(
-            $thePlayer["fisrtname"],
+            $thePlayer["firstname"],
             $thePlayer["lastname"],
             $thePlayer["birthdate"],
             $thePlayer["picture"],

@@ -1,6 +1,6 @@
 <?php
 require_once "includes/database.php";
-require_once "index.php";   // contient les fonctions selectPlayers / selectTeams / selectClubs
+require_once "index.php";
 require_once "includes/functions.php";
 
 // Récupération des objets
@@ -34,10 +34,8 @@ $clubs = selectClubs();
 
 
             <?php
-            // Trouver l’équipe (si elle existe) : on cherche le team_id dans player_has_team
             $teamName = "Aucun club";
             foreach ($teams as $team) {
-                // On suppose que Player a un getId() et qu’il y a une table player_has_team
                 $req = $connexion->prepare(
                     "SELECT team_id FROM player_has_team WHERE player_id = :pid"
                 );
@@ -52,7 +50,6 @@ $clubs = selectClubs();
             <p>Club : <?= htmlspecialchars($teamName) ?></p>
 
             <?php
-            // Afficher les matchs de l'équipe du joueur
             if ($teamName !== "Aucun club") {
                 $matchs = $connexion->prepare(
                     "SELECT m.date, m.team_score, m.opponent_score, oc.city
