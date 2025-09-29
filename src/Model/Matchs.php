@@ -1,10 +1,13 @@
 <?php
+
+namespace src\Model;
+
 class Matchs
 {
     private ?int $id;
     private int $teamScore;
     private int $opponentScore;
-    private DateTime $date;
+    private \DateTime $date;
 
     private int $team_id;
 
@@ -17,7 +20,7 @@ class Matchs
         $this->id = $id;
         $this->teamScore = $teamScore;
         $this->opponentScore = $opponentScore;
-        $this->date = $date instanceof DateTime ? $date : new DateTime($date);
+        $this->date = $date instanceof \DateTime ? $date : new \DateTime($date);
         $this->team_id = $team_id;
         $this->city = $city;
         $this->opposing_club_id = $opposing_club_id;
@@ -35,7 +38,7 @@ class Matchs
     {
         return $this->opponentScore;
     }
-    public function getDate(): DateTime
+    public function getDate(): \DateTime
     {
         return $this->date;
     }
@@ -49,7 +52,7 @@ class Matchs
         return $this->city;
     }
 
-        public function getOpposingClubId(): int
+    public function getOpposingClubId(): int
     {
         return $this->opposing_club_id;
     }

@@ -1,4 +1,7 @@
 <?php
+
+namespace src\Model;
+
 class StaffMember
 {
     private string $firstname;
