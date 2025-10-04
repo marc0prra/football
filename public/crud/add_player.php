@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             $infos["date_de_naissance"],
             $infos["photo"]
         );
-        insertPlayer($player);
+        $player->insertPlayer();
         $infos = "";
         $_SESSION['success'] = "Le joueur a bien été ajouté !";
         header("Location: " . $_SERVER['PHP_SELF']);

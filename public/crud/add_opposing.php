@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             $infos["adresse"],
             $infos["ville"],
         );
-        insertClub($opposingClub);
+        $opposingClub->insertClub();
         $infos = "";
         $_SESSION['success'] = "Le club opposé a bien été ajouté !";
         header("Location: " . $_SERVER['PHP_SELF']);

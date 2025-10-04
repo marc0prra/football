@@ -21,4 +21,15 @@ class Team
         return $this->name;
     }
 
+    public function insertTeam(): void
+{
+    global $connexion;
+    $nom = $this->getName();
+
+    $requeteInsertion = $connexion->prepare('INSERT INTO team (name) VALUES (:team)');
+    $requeteInsertion->bindParam('team', $nom);
+    $requeteInsertion->execute();
+
+}
+
 }

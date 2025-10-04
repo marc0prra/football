@@ -1,10 +1,14 @@
 <?php
+
+use src\Model\OpposingClub;
+use src\Model\Player;
+use src\Model\PlayerHasTeam;
 require_once "index.php";
 
 // Récupération des objets
-$players = selectPlayers();
-$teams = selectTeams();
-$clubs = selectClubs();
+$players = Player::selectPlayers();
+$teams = PlayerHasTeam::selectTeams();
+$clubs = OpposingClub::selectClubs();
 ?>
 
 <h1>Infos des Joueurs</h1>

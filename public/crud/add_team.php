@@ -7,7 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     if (!isset($infos["errors"])) {
         //Tout les champs sont remplis ? On peut insérer en BDD
         $team = new Team($infos["team"]);
-        insertTeam($team);
+        $team->insertTeam();
     }
 }
 ?>

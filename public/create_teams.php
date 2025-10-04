@@ -1,8 +1,9 @@
 <?php //Objectif : Création des équipes "player_has_team"
 include_once("index.php");
 use src\Model\PlayerHasTeam;
-$players = selectPlayers();
-$teams = selectTeams();
+use src\Model\Player;
+$players = Player::selectPlayers();
+$teams = PlayerHasTeam::selectTeams();
 $types = ["Attaquant", "Milieu", "Défenseur", "Gardien"];
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $infos = returnArray($_POST);
@@ -13,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             $infos["équipe"],
             $infos["position"]
         );
-        insertPlayerHasTeam($playHasTeam);
+        $playHasTeam->insertPlayerHasTeam();
         $infos = "";
         $_SESSION['success'] = "Le joueur a bien été assigné à une équipe !";
         header("Location: " . $_SERVER['PHP_SELF']);

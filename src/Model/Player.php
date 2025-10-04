@@ -41,4 +41,50 @@ class Player
     {
         return $this->picture;
     }
+
+
+    public function insertPlayer(): void
+    {
+        global $connexion;
+        $prenom = $this->getFirstname();
+        $nom = $this->getLastname();
+        $age = $this->getBirthdate()->format('Y-m-d H:i:s');
+        $photo = $this->getPicture();
+
+        $requeteInsertion = $connexion->prepare('INSERT INTO player (firstname, lastname, birthdate, picture) 
+        VALUES (:prenom, :nom, :age, :photo)');
+        $requeteInsertion->bindParam('prenom', $prenom);
+        $requeteInsertion->bindParam('nom', $nom);
+        $requeteInsertion->bindParam('age', $age);
+        $requeteInsertion->bindParam('photo', $photo);
+        $requeteInsertion->execute();
+    }
+
+
+    static function selectPlayers(): array
+    {
+        global $connexion;
+        $requeteSelection = $connexion->prepare(
+            'SELECT * FROM player p 
+            LEFT JOIN player_has_team pht ON pht.player_id = p.id'
+        );
+        $requeteSelection->execute();
+        $thePlayers = $requeteSelection->fetchAll(\PDO::FETCH_ASSOC);
+
+        $counter = 1;
+        $players = [];
+
+        foreach ($thePlayers as $thePlayer) {
+            $players[$counter] = new Player(
+                $thePlayer["firstname"],
+                $thePlayer["lastname"],
+                $thePlayer["birthdate"],
+                $thePlayer["picture"],
+                id: $thePlayer["id"]
+            );
+            $counter++;
+        }
+        return $players;
+    }
+
 }
