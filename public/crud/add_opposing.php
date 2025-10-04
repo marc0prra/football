@@ -1,7 +1,7 @@
 <?php
 session_start();
-include_once("includes/header.php");
-include_once("index.php");
+include_once("./index.php");
+use src\Model\OpposingClub;
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $infos = returnArray($_POST);
     if (!isset($infos["errors"])) {
@@ -49,3 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     <button type="submit">Créer équipe opposé</button>
 
 </form>
+
+<?php
+require_once(__DIR__ . '/../../includes/footer.php');
+?>

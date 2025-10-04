@@ -1,5 +1,7 @@
 <?php
 include_once("index.php");
+use src\Model\Player;
+use src\Model\PlayerHasTeam;
 // --- Connexion BDD ---
 $pdo = new PDO("mysql:host=localhost;dbname=football;charset=utf8mb4", "root", "");
 
@@ -222,3 +224,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 </body>
 
 </html>
+<?php
+require_once(__DIR__ . '/../includes/footer.php');
+?>

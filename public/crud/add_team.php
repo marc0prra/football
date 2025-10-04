@@ -1,6 +1,6 @@
 <?php //Objectif : Ajout d'équipes dans la BDD
-include_once("includes/header.php");
 include_once("index.php");
+use src\Model\Team;
 // Vérifier qu'on est en POST
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $infos = returnArray($_POST);
@@ -34,5 +34,5 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 </form>
 
 <?php
-include_once("includes/footer.php");
+require_once(__DIR__ . '/../../includes/footer.php');
 ?>

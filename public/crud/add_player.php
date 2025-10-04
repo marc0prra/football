@@ -62,5 +62,5 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 </form>
 
 <?php
-include_once("includes/footer.php");
+require_once(__DIR__ . '/../../includes/footer.php');
 ?>

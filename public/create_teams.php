@@ -1,5 +1,6 @@
 <?php //Objectif : Création des équipes "player_has_team"
 include_once("index.php");
+use src\Model\PlayerHasTeam;
 $players = selectPlayers();
 $teams = selectTeams();
 $types = ["Attaquant", "Milieu", "Défenseur", "Gardien"];
@@ -63,3 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     <button type="submit">Ajouter à l'équipe</button>
 </form>
+
+<?php
+require_once(__DIR__ . '/../includes/footer.php');
+?>
