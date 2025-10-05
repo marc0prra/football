@@ -3,11 +3,12 @@
 use src\Model\OpposingClub;
 use src\Model\Player;
 use src\Model\PlayerHasTeam;
+use src\Model\Team;
 require_once "index.php";
 
 // Récupération des objets
 $players = Player::selectPlayers();
-$teams = PlayerHasTeam::selectTeams();
+$teams = Team::selectTeams();
 $clubs = OpposingClub::selectClubs();
 ?>
 

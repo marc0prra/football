@@ -21,15 +21,37 @@ class Team
         return $this->name;
     }
 
+    static function selectTeams(): array
+    {
+        global $connexion;
+        $requeteSelection = $connexion->prepare(
+            'SELECT * FROM team t
+            LEFT JOIN player_has_team pht ON pht.team_id = t.id ORDER BY name'
+        );
+        $requeteSelection->execute();
+        $theTeams = $requeteSelection->fetchAll(\PDO::FETCH_ASSOC);
+
+        $counter = 1;
+        $teams = [];
+
+        foreach ($theTeams as $theTeam) {
+            $teams[$counter] = new Team(
+                $theTeam["name"],
+                id: $theTeam["id"]
+            );
+            $counter++;
+        }
+        return $teams;
+    }
+
     public function insertTeam(): void
-{
-    global $connexion;
-    $nom = $this->getName();
+    {
+        global $connexion;
+        $nom = $this->getName();
 
-    $requeteInsertion = $connexion->prepare('INSERT INTO team (name) VALUES (:team)');
-    $requeteInsertion->bindParam('team', $nom);
-    $requeteInsertion->execute();
+        $requeteInsertion = $connexion->prepare('INSERT INTO team (name) VALUES (:team)');
+        $requeteInsertion->bindParam('team', $nom);
+        $requeteInsertion->execute();
 
-}
-
+    }
 }

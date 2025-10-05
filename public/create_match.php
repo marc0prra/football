@@ -3,7 +3,9 @@ include_once("index.php");
 use src\Model\Matchs;
 use src\Model\OpposingClub;
 use src\Model\PlayerHasTeam;
-$teams = PlayerHasTeam::selectTeams();
+use src\Model\Team;
+
+$teams = Team::selectTeams();
 $clubs = OpposingClub::selectClubs();
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $infos = returnArray($_POST);

@@ -5,12 +5,12 @@ namespace src\Model;
 class PlayerHasTeam
 {
     private string $role; // attaquant, milieu, défenseur, gardien
-    private int $player_id;
-    private int $team_id;
-    public function __construct(int $player_id, int $team_id, string $role)
+    private Player $player;
+    private Team $team;
+    public function __construct(Player $player, Team $team, string $role)
     {
-        $this->player_id = $player_id;
-        $this->team_id = $team_id;
+        $this->player = $player;
+        $this->team = $team;
         $this->role = $role;
     }
 
@@ -21,12 +21,12 @@ class PlayerHasTeam
 
     public function getPlayer(): int
     {
-        return $this->player_id;
+        return $this->player->getId();
     }
 
     public function getTeam(): int
     {
-        return $this->team_id;
+        return $this->team->getId();
     }
 
     public function insertPlayerHasTeam()
@@ -43,27 +43,27 @@ class PlayerHasTeam
         $requeteInsertion->execute();
     }
 
-    static function selectTeams(): array
+        static function selectTargetPlayerHasTeam(int $player_id): array
     {
         global $connexion;
-        $requeteSelection = $connexion->prepare(
-            'SELECT * FROM team t
-            LEFT JOIN player_has_team pht ON pht.team_id = t.id ORDER BY name'
-        );
-        $requeteSelection->execute();
-        $theTeams = $requeteSelection->fetchAll(\PDO::FETCH_ASSOC);
 
-        $counter = 1;
-        $teams = [];
+        $selectTargetPlayerHasTeam = $connexion->prepare('SELECT * FROM player_has_team WHERE player_id = :id');
+        $selectTargetPlayerHasTeam->bindParam('id', $player_id);
+        $selectTargetPlayerHasTeam->execute();
+        $theTeams = $selectTargetPlayerHasTeam->fetchAll(\PDO::FETCH_ASSOC);
+        var_dump($theTeams);
+        $teamsOfPlayer = [];
 
         foreach ($theTeams as $theTeam) {
-            $teams[$counter] = new Team(
+            $players[] = new PlayerHasTeam(
                 $theTeam["name"],
-                id: $theTeam["id"]
+                $theTeam["id"],
             );
-            $counter++;
         }
-        return $teams;
+
+        return $teamsOfPlayer;
     }
+
+
 
 }

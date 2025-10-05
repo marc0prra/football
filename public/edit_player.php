@@ -1,47 +1,22 @@
 <?php
 include_once("index.php");
 use src\Model\Player;
+use src\Model\Team;
 use src\Model\PlayerHasTeam;
 // --- Connexion BDD ---
 $pdo = new PDO("mysql:host=localhost;dbname=football;charset=utf8mb4", "root", "");
 
 // --- Vérification de l'ID ---
 if (isset($_GET['id'])) {
-    $player_id = $_GET['id'];
-
-    $requeteSelection = $connexion->prepare(
-        'SELECT * FROM player
-            WHERE id = :id'
-    );
-    $requeteSelection->bindParam('id', $player_id);
-    $requeteSelection->execute();
-    $getThePlayer = $requeteSelection->fetchAll(PDO::FETCH_ASSOC);
-
-    $player = new Player(
-        $getThePlayer[0]["firstname"],
-        $getThePlayer[0]["lastname"],
-        new DateTime($getThePlayer[0]["birthdate"]),
-        $getThePlayer[0]["picture"],
-        $getThePlayer[0]["id"]
-    );
-
-
-    $requeteSelectTeam = $connexion->prepare('SELECT * FROM player_has_team WHERE player_id = :id');
-    $requeteSelectTeam->bindParam('id', $player_id);
-    $requeteSelectTeam->execute();
-    $theTeams = $requeteSelectTeam->fetchAll(PDO::FETCH_ASSOC);
+    $player = Player::selectTargetPlayer($player_id = $_GET['id']);
+    $teamsOfPlayer = PlayerHasTeam::selectTargetPlayerHasTeam($player_id);
+    var_dump($teamsOfPlayer);
 
     $counter = 1;
     $players = [];
-    foreach ($theTeams as $theTeam) {
-        $players[$counter] = new PlayerHasTeam(
-            $theTeam["player_id"],
-            $theTeam["team_id"],
-            $theTeam["role"]
-        );
-
+    foreach ($targetTeams as $theTeam) {
         $requeteSelectNameTeam = $connexion->prepare('SELECT `name` FROM team WHERE id = :id');
-        $requeteSelectNameTeam->bindParam('id', $theTeam["team_id"]);
+        $requeteSelectNameTeam->bindParam('id', $theTeam->getId());
         $requeteSelectNameTeam->execute();
         $theNameTeam[] = $requeteSelectNameTeam->fetch(PDO::FETCH_ASSOC);
     }
@@ -61,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             $playerPost = new Player(
                 $infos["firstname"],
                 $infos["lastname"],
-                new DateTime($infos["birthdate"]),
+                $infos["birthdate"],
                 $infos["picture"]
             );
 
@@ -173,9 +148,9 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                     ?>
                 </div>
             <?php endif; ?>
-            <?php if (!empty($theTeams) && !empty($theNameTeam)): ?>
+            <?php if (!empty($targetTeams) && !empty($theNameTeam)): ?>
                 <ul>
-                    <?php foreach ($theTeams as $index => $theTeam): ?>
+                    <?php foreach ($targetTeams as $index => $theTeam): ?>
                         <li><?= htmlspecialchars($theNameTeam[$index]["name"]) ?> : <?= htmlspecialchars($theTeam["role"]) ?>
                         </li>
                     <?php endforeach; ?>

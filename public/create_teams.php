@@ -2,8 +2,9 @@
 include_once("index.php");
 use src\Model\PlayerHasTeam;
 use src\Model\Player;
+use src\Model\Team;
 $players = Player::selectPlayers();
-$teams = PlayerHasTeam::selectTeams();
+$teams = Team::selectTeams();
 $types = ["Attaquant", "Milieu", "Défenseur", "Gardien"];
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $infos = returnArray($_POST);
