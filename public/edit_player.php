@@ -1,125 +1,89 @@
 <?php
-include_once("index.php");
-// --- Connexion BDD ---
-$pdo = new PDO("mysql:host=localhost;dbname=football;charset=utf8mb4", "root", "");
+session_start();
 
-// --- Vérification de l'ID ---
-if (isset($_GET['id'])) {
-    $player_id = $_GET['id'];
+require_once __DIR__ . "/includes/autoloader.php";
+Autoloader::register();
 
-    $requeteSelection = $connexion->prepare(
-        'SELECT * FROM player
-            WHERE id = :id'
-    );
-    $requeteSelection->bindParam('id', $player_id);
-    $requeteSelection->execute();
-    $getThePlayer = $requeteSelection->fetchAll(PDO::FETCH_ASSOC);
+require_once __DIR__ . "/includes/database.php";
 
-    $player = new Player(
-        $getThePlayer[0]["firstname"],
-        $getThePlayer[0]["lastname"],
-        new DateTime($getThePlayer[0]["birthdate"]),
-        $getThePlayer[0]["picture"],
-        $getThePlayer[0]["id"]
-    );
+use src\Model\DatabaseManager;
+use src\Model\Player;
+use src\Model\PlayerHasTeam;
+use src\Model\Team;
 
+$db = new DatabaseManager($connexion);
 
-    $requeteSelectTeam = $connexion->prepare('SELECT * FROM player_has_team WHERE player_id = :id');
-    $requeteSelectTeam->bindParam('id', $player_id);
-    $requeteSelectTeam->execute();
-    $theTeams = $requeteSelectTeam->fetchAll(PDO::FETCH_ASSOC);
-
-    $counter = 1;
-    $players = [];
-    foreach ($theTeams as $theTeam) {
-        $players[$counter] = new PlayerHasTeam(
-            $theTeam["player_id"],
-            $theTeam["team_id"],
-            $theTeam["role"]
-        );
-
-        $requeteSelectNameTeam = $connexion->prepare('SELECT `name` FROM team WHERE id = :id');
-        $requeteSelectNameTeam->bindParam('id', $theTeam["team_id"]);
-        $requeteSelectNameTeam->execute();
-        $theNameTeam[] = $requeteSelectNameTeam->fetch(PDO::FETCH_ASSOC);
-    }
+if (!isset($_GET['id'])) {
+    die("ID du joueur manquant !");
 }
 
+$player_id = (int) $_GET['id'];
 
+$players = $db->selectPlayers();
+$player = null;
+foreach ($players as $p) {
+    if ($p->getId() === $player_id) {
+        $player = $p;
+    }
+}
+if (!$player) {
+    die("Joueur introuvable !");
+}
 
-$requeteSelectNameTeam = $connexion->prepare('SELECT * FROM team ORDER BY `name`');
-$requeteSelectNameTeam->execute();
-$teams = $requeteSelectNameTeam->fetchAll(PDO::FETCH_ASSOC);
+$playerTeams = [];
+$allTeams = $db->selectTeams();
+$theTeams = $db->getConnexion()->prepare('SELECT * FROM player_has_team WHERE player_id = :id');
+$theTeams->bindParam('id', $player_id);
+$theTeams->execute();
+$playerTeamsRaw = $theTeams->fetchAll(PDO::FETCH_ASSOC);
+
+foreach ($playerTeamsRaw as $pt) {
+    $playerTeams[] = new PlayerHasTeam($pt["player_id"], $pt["team_id"], $pt["role"]);
+}
 
 $types = ["Attaquant", "Milieu", "Défenseur", "Gardien"];
-if ($_SERVER['REQUEST_METHOD'] == "POST") {
-    $infos = returnArray($_POST);
+
+if ($_SERVER['REQUEST_METHOD'] === "POST") {
+    $infos = $db->returnArray($_POST);
+
     if (!isset($infos["errors"])) {
         if (isset($infos["firstname"])) {
             $playerPost = new Player(
                 $infos["firstname"],
                 $infos["lastname"],
                 new DateTime($infos["birthdate"]),
-                $infos["picture"]
+                $infos["picture"],
+                $player->getId()
             );
-
-            $firstName = $playerPost->getFirstname();
-            $lastName = $playerPost->getLastname();
-            $birthDate = $playerPost->getBirthdate()->format('Y-m-d H:i:s');
-            $picture = $playerPost->getPicture();
-
-            $requeteUpdate = $connexion->prepare(
-                'UPDATE player 
-            SET firstname = :firstname, lastname = :lastname, birthdate = :birthdate, picture = :picture
-            WHERE id = :id'
-            );
-            $requeteUpdate->bindParam('id', $player_id);
-            $requeteUpdate->bindParam('firstname', $firstName);
-            $requeteUpdate->bindParam('lastname', $lastName);
-            $requeteUpdate->bindParam('birthdate', $birthDate);
-            $requeteUpdate->bindParam('picture', $picture);
-            $requeteUpdate->execute();
-
-            $_SESSION['joueur'] = "Le joueur a bien modifié !";
-            header("Location: " . $_SERVER['PHP_SELF'] . "?id=" . $player_id);
-            exit;
-
-        } elseif (isset($infos["joueur"])) {
-            $team = new PlayerHasTeam(
-                $infos["joueur"],
-                $infos["équipe"],
-                $infos["position"]
-            );
-            $idJoueur = $team->getPlayer();
-            $idTeam = $team->getTeam();
-            $positionJoueur = $team->getRole();
-
-            var_dump($positionJoueur);
-
-            $insertHasTeam = $connexion->prepare(
-                'INSERT INTO player_has_team (player_id, team_id, `role`) VALUES (:pid, :tid, :pos)'
-            );
-            $insertHasTeam->bindParam('pid', $idJoueur);
-            $insertHasTeam->bindParam('tid', $idTeam);
-            $insertHasTeam->bindParam('pos', $positionJoueur);
-            $insertHasTeam->execute();
-            $_SESSION['equipe'] = "Le joueur a bien été assigné à une équipe !";
+            $db->insertPlayer($playerPost);
+            $_SESSION['joueur'] = "Le joueur a bien été modifié !";
             header("Location: " . $_SERVER['PHP_SELF'] . "?id=" . $player_id);
             exit;
         }
 
+        if (isset($infos["joueur"])) {
+            $teamAssignment = new PlayerHasTeam(
+                $infos["joueur"],
+                $infos["équipe"],
+                $infos["position"]
+            );
+            $db->insertPlayerHasTeam($teamAssignment);
+            $_SESSION['equipe'] = "Le joueur a bien été assigné à une équipe !";
+            header("Location: " . $_SERVER['PHP_SELF'] . "?id=" . $player_id);
+            exit;
+        }
     }
 }
-
-
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modifier joueur</title>
+    <link rel="stylesheet" href="includes/style.css?v=3">
 </head>
 
 <body>
@@ -127,93 +91,70 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         <div>
             <h1>Modifier le joueur</h1>
             <?php if (isset($_SESSION['joueur'])): ?>
-                <div class="success">
-                    <?php
-                    echo $_SESSION['joueur'];
-                    unset($_SESSION['joueur']);
-                    ?>
-                </div>
+                <div class="success"><?= $_SESSION['joueur'];
+                unset($_SESSION['joueur']); ?></div>
             <?php endif; ?>
-
 
             <form method="post">
                 <label>Prénom :</label><br>
-                <input type="text" name="firstname"
-                    value="<?= isset($playerPost) ? $playerPost->getFirstname() : htmlspecialchars($player->getFirstname()) ?>"
+                <input type="text" name="firstname" value="<?= htmlspecialchars($player->getFirstname()) ?>"
                     required><br><br>
 
                 <label>Nom :</label><br>
-                <input type="text" name="lastname"
-                    value="<?= isset($playerPost) ? $playerPost->getLastname() : htmlspecialchars($player->getLastname()) ?>"
+                <input type="text" name="lastname" value="<?= htmlspecialchars($player->getLastname()) ?>"
                     required><br><br>
 
                 <label>Date de naissance :</label><br>
-                <input type="date" name="birthdate"
-                    value="<?= isset($playerPost) ? $playerPost->getBirthdate()->format('Y-m-d') : htmlspecialchars($player->getBirthdate()->format('Y-m-d')) ?>"
-                    required>
-                <br><br>
+                <input type="date" name="birthdate" value="<?= $player->getBirthdate()->format('Y-m-d') ?>"
+                    required><br><br>
 
                 <label>Photo :</label><br>
-                <input type="text" name="picture"
-                    value="<?= isset($playerPost) ? $playerPost->getPicture() : htmlspecialchars($player->getPicture()) ?>"><br><br>
+                <input type="text" name="picture" value="<?= htmlspecialchars($player->getPicture()) ?>"><br><br>
 
                 <button type="submit">Modifier</button>
             </form>
         </div>
-        <!---Formulaire d'association à une équipe------>
+
         <div>
             <h1>Ajouter le joueur dans une équipe</h1>
             <?php if (isset($_SESSION['equipe'])): ?>
-                <div class="success">
-                    <?php
-                    echo $_SESSION['equipe'];
-                    unset($_SESSION['equipe']);
-                    ?>
-                </div>
+                <div class="success"><?= $_SESSION['equipe'];
+                unset($_SESSION['equipe']); ?></div>
             <?php endif; ?>
-            <?php if (!empty($theTeams) && !empty($theNameTeam)): ?>
+
+            <?php if (!empty($playerTeams)): ?>
                 <ul>
-                    <?php foreach ($theTeams as $index => $theTeam): ?>
-                        <li><?= htmlspecialchars($theNameTeam[$index]["name"]) ?> : <?= htmlspecialchars($theTeam["role"]) ?>
-                        </li>
+                    <?php foreach ($playerTeams as $pt): ?>
+                        <?php
+                        $teamName = "";
+                        foreach ($allTeams as $t) {
+                            if ($t->getId() === $pt->getTeam())
+                                $teamName = $t->getName();
+                        }
+                        ?>
+                        <li><?= htmlspecialchars($teamName) ?> : <?= htmlspecialchars($pt->getRole()) ?></li>
                     <?php endforeach; ?>
                 </ul>
             <?php else: ?>
                 <p>Le joueur n'est associé à aucun club pour le moment.</p>
             <?php endif; ?>
 
-
-            <form action="" method="post">
-                <p class="error"><?php echo isset($infos["errors"]["joueur"]) ? $infos["errors"]["joueur"] : "" ?></p>
-                <select name="joueur" id="joueur">
-                    <option value="<?= htmlspecialchars($player->getId()) ?>">
-                        <?=
-                            isset($playerPost)
-                            ? $playerPost->getFirstname() . " " . $playerPost->getLastname()
-                            : htmlspecialchars($player->getFirstname() . " " . $player->getLastname()) ?>
-                    </option>
-                </select><br><br>
-
-                <p class="error"><?php echo isset($infos["errors"]["équipe"]) ? $infos["errors"]["équipe"] : "" ?></p>
+            <form method="post">
                 <label for="select-team">Choisissez une équipe</label><br>
                 <select name="équipe" id="équipe">
-                    <?php foreach ($teams as $team) { ?>
-                        <option value="<?= htmlspecialchars($team["id"]) ?>">
-                            <?= htmlspecialchars($team["name"]) ?>
-                        </option>
-                    <?php } ?>
+                    <?php foreach ($allTeams as $t): ?>
+                        <option value="<?= $t->getId() ?>"><?= htmlspecialchars($t->getName()) ?></option>
+                    <?php endforeach; ?>
                 </select><br><br>
 
-                <p class="error"><?php echo isset($infos["errors"]["position"]) ? $infos["errors"]["position"] : "" ?>
-                </p>
                 <label for="select-type">Choisissez une position pour le joueur</label><br>
                 <select name="position" id="position">
-                    <?php foreach ($types as $type) { ?>
-                        <option value="<?= htmlspecialchars($type) ?>">
-                            <?= htmlspecialchars($type) ?>
-                        </option>
-                    <?php } ?>
+                    <?php foreach ($types as $type): ?>
+                        <option value="<?= htmlspecialchars($type) ?>"><?= htmlspecialchars($type) ?></option>
+                    <?php endforeach; ?>
                 </select><br><br>
+
+                <input type="hidden" name="joueur" value="<?= $player->getId() ?>">
 
                 <button type="submit">Ajouter à l'équipe</button>
             </form>
