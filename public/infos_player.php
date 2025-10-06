@@ -1,16 +1,29 @@
 <?php
+include("index.php");
+require_once __DIR__ . "/includes/autoloader.php";
+Autoloader::register();
 
-use src\Model\OpposingClub;
-use src\Model\Player;
-use src\Model\PlayerHasTeam;
-use src\Model\Team;
-require_once "index.php";
+require_once __DIR__ . "/includes/database.php";
+
+use src\Model\DatabaseManager;
+$db = new DatabaseManager($connexion);
 
 // Récupération des objets
-$players = Player::selectPlayers();
-$teams = Team::selectTeams();
-$clubs = OpposingClub::selectClubs();
+$players = $db->selectPlayers();
+$teams = $db->selectTeams();
+$clubs = $db->selectClubs();
+
 ?>
+
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Afficher joueur</title>
+    <link rel="stylesheet" href="includes/style.css?v=3">
+</head>
 
 <h1>Infos des Joueurs</h1>
 
@@ -23,10 +36,8 @@ $clubs = OpposingClub::selectClubs();
 
 
         <?php
-        // Trouver l’équipe (si elle existe) : on cherche le team_id dans player_has_team
         $teamName = "Aucun club";
         foreach ($teams as $team) {
-            // On suppose que Player a un getId() et qu’il y a une table player_has_team
             $req = $connexion->prepare(
                 "SELECT team_id FROM player_has_team WHERE player_id = :pid"
             );

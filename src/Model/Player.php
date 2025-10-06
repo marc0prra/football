@@ -2,6 +2,7 @@
 
 namespace src\Model;
 
+use DateTime;
 
 class Player
 {
@@ -11,8 +12,13 @@ class Player
     private \DateTime $birthdate;
     private string $picture;
 
-    public function __construct($firstname, $lastname, \DateTime|string $birthdate, $picture, ?int $id = null)
-    {
+    public function __construct(
+        string $firstname = "",
+        string $lastname = "",
+        DateTime|string $birthdate = "2000-01-01",
+        string $picture = "",
+        ?int $id = null
+    ) {
         $this->id = $id;
         $this->firstname = $firstname;
         $this->lastname = $lastname;
@@ -20,7 +26,7 @@ class Player
         $this->picture = $picture;
     }
 
-    // --- Getters ---
+    // Getters
     public function getId(): ?int
     {
         return $this->id;
@@ -42,72 +48,25 @@ class Player
         return $this->picture;
     }
 
-
-    public function insertPlayer(): void
+    // Setters
+    public function setId(?int $id): void
     {
-        global $connexion;
-        $prenom = $this->getFirstname();
-        $nom = $this->getLastname();
-        $age = $this->getBirthdate()->format('Y-m-d H:i:s');
-        $photo = $this->getPicture();
-
-        $requeteInsertion = $connexion->prepare('INSERT INTO player (firstname, lastname, birthdate, picture) 
-        VALUES (:prenom, :nom, :age, :photo)');
-        $requeteInsertion->bindParam('prenom', $prenom);
-        $requeteInsertion->bindParam('nom', $nom);
-        $requeteInsertion->bindParam('age', $age);
-        $requeteInsertion->bindParam('photo', $photo);
-        $requeteInsertion->execute();
+        $this->id = $id;
     }
-
-
-    static function selectPlayers(): array
+    public function setFirstname(string $firstname): void
     {
-        global $connexion;
-        $requeteSelection = $connexion->prepare(
-            'SELECT * FROM player p 
-            LEFT JOIN player_has_team pht ON pht.player_id = p.id'
-        );
-        $requeteSelection->execute();
-        $thePlayers = $requeteSelection->fetchAll(\PDO::FETCH_ASSOC);
-
-        $counter = 1;
-        $players = [];
-
-        foreach ($thePlayers as $thePlayer) {
-            $players[$counter] = new Player(
-                $thePlayer["firstname"],
-                $thePlayer["lastname"],
-                $thePlayer["birthdate"],
-                $thePlayer["picture"],
-                id: $thePlayer["id"]
-            );
-            $counter++;
-        }
-        return $players;
+        $this->firstname = $firstname;
     }
-
-    static function selectTargetPlayer(int $player_id): Player
+    public function setLastname(string $lastname): void
     {
-        global $connexion;
-
-        $requeteSelection = $connexion->prepare(
-            'SELECT * FROM player
-            WHERE id = :id'
-        );
-        $requeteSelection->bindParam('id', $player_id);
-        $requeteSelection->execute();
-        $getThePlayer = $requeteSelection->fetchAll(\PDO::FETCH_ASSOC);
-
-        $player = new Player(
-            $getThePlayer[0]["firstname"],
-            $getThePlayer[0]["lastname"],
-            $getThePlayer[0]["birthdate"],
-            $getThePlayer[0]["picture"],
-            $getThePlayer[0]["id"]
-        );
-
-        return $player;
+        $this->lastname = $lastname;
     }
-
+    public function setBirthdate(DateTime|string $birthdate): void
+    {
+        $this->birthdate = $birthdate instanceof DateTime ? $birthdate : new DateTime($birthdate);
+    }
+    public function setPicture(string $picture): void
+    {
+        $this->picture = $picture;
+    }
 }
