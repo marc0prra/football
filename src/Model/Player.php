@@ -2,6 +2,7 @@
 
 namespace src\Model;
 
+use DateTime;
 
 class Player
 {
@@ -11,8 +12,13 @@ class Player
     private DateTime $birthdate;
     private string $picture;
 
-    public function __construct($firstname, $lastname, DateTime|string $birthdate, $picture, ?int $id = null)
-    {
+    public function __construct(
+        string $firstname = "",
+        string $lastname = "",
+        DateTime|string $birthdate = "2000-01-01",
+        string $picture = "",
+        ?int $id = null
+    ) {
         $this->id = $id;
         $this->firstname = $firstname;
         $this->lastname = $lastname;
@@ -20,7 +26,7 @@ class Player
         $this->picture = $picture;
     }
 
-    // --- Getters ---
+    // Getters
     public function getId(): ?int
     {
         return $this->id;
@@ -40,5 +46,27 @@ class Player
     public function getPicture(): string
     {
         return $this->picture;
+    }
+
+    // Setters
+    public function setId(?int $id): void
+    {
+        $this->id = $id;
+    }
+    public function setFirstname(string $firstname): void
+    {
+        $this->firstname = $firstname;
+    }
+    public function setLastname(string $lastname): void
+    {
+        $this->lastname = $lastname;
+    }
+    public function setBirthdate(DateTime|string $birthdate): void
+    {
+        $this->birthdate = $birthdate instanceof DateTime ? $birthdate : new DateTime($birthdate);
+    }
+    public function setPicture(string $picture): void
+    {
+        $this->picture = $picture;
     }
 }
