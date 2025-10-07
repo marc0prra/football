@@ -3,35 +3,24 @@ include_once("index.php");
 use src\Model\Player;
 use src\Model\Team;
 use src\Model\PlayerHasTeam;
-// --- Connexion BDD ---
-$pdo = new PDO("mysql:host=localhost;dbname=football;charset=utf8mb4", "root", "");
 
 // --- Vérification de l'ID ---
 if (isset($_GET['id'])) {
-    $player = Player::selectTargetPlayer($player_id = $_GET['id']);
-    $teamsOfPlayer = PlayerHasTeam::selectTargetPlayerHasTeam($player_id);
-    var_dump($teamsOfPlayer);
 
-    $counter = 1;
-    $players = [];
-    foreach ($targetTeams as $theTeam) {
-        $requeteSelectNameTeam = $connexion->prepare('SELECT `name` FROM team WHERE id = :id');
-        $requeteSelectNameTeam->bindParam('id', $theTeam->getId());
-        $requeteSelectNameTeam->execute();
-        $theNameTeam[] = $requeteSelectNameTeam->fetch(PDO::FETCH_ASSOC);
-    }
+    // --- On récupère le joueur ---
+    $player = Player::selectTargetPlayer($player_id = $_GET['id']);
+    // --- On récupère le nom des équipes du joueur et la position du joueur ---
+    $theTeamsName = PlayerHasTeam::selectTargetPlayerHasTeam($player_id, $player);
+    // --- On récupère le nom de TOUTES les équipes ---
+    $allTeams = Team::selectTeams();
 }
 
-
-
-$requeteSelectNameTeam = $connexion->prepare('SELECT * FROM team ORDER BY `name`');
-$requeteSelectNameTeam->execute();
-$teams = $requeteSelectNameTeam->fetchAll(PDO::FETCH_ASSOC);
-
+// --- !!!!! A tansformer en énumérations dans la classe PlayerHasTeam !!!!! ---
 $types = ["Attaquant", "Milieu", "Défenseur", "Gardien"];
 
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
-    $infos = $db->returnArray($_POST);
+
+    $infos->returnArray($_POST);
 
     if (!isset($infos["errors"])) {
         if (isset($infos["firstname"])) {
@@ -47,6 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
             $birthDate = $playerPost->getBirthdate()->format('Y-m-d H:i:s');
             $picture = $playerPost->getPicture();
 
+            // --- Mise à jour des infos du joueur en BD ---
             $requeteUpdate = $connexion->prepare(
                 'UPDATE player 
             SET firstname = :firstname, lastname = :lastname, birthdate = :birthdate, picture = :picture
@@ -124,10 +114,10 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                 <div class="success"><?= $_SESSION['equipe'];
                 unset($_SESSION['equipe']); ?></div>
             <?php endif; ?>
-            <?php if (!empty($targetTeams) && !empty($theNameTeam)): ?>
+            <?php if (!empty($theTeamsName)): ?>
                 <ul>
-                    <?php foreach ($targetTeams as $index => $theTeam): ?>
-                        <li><?= htmlspecialchars($theNameTeam[$index]["name"]) ?> : <?= htmlspecialchars($theTeam["role"]) ?>
+                    <?php foreach ($theTeamsName as $theTeam): ?>
+                        <li><?= htmlspecialchars($theTeam["name"]) ?> : <?= htmlspecialchars($theTeam["role"]) ?>
                         </li>
                     <?php endforeach; ?>
                 </ul>

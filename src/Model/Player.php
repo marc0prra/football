@@ -69,4 +69,26 @@ class Player
     {
         $this->picture = $picture;
     }
+
+    static function selectTargetPlayer(int $player_id): Player
+    {
+        global $connexion;
+        $requeteSelection = $connexion->prepare(
+            'SELECT * FROM player
+            WHERE id = :id'
+        );
+        $requeteSelection->bindParam('id', $player_id);
+        $requeteSelection->execute();
+        $getThePlayer = $requeteSelection->fetchAll(\PDO::FETCH_ASSOC);
+
+        $player = new Player(
+            $getThePlayer[0]["firstname"],
+            $getThePlayer[0]["lastname"],
+            $getThePlayer[0]["birthdate"],
+            $getThePlayer[0]["picture"],
+            $getThePlayer[0]["id"]
+        );
+
+        return $player;
+    }
 }

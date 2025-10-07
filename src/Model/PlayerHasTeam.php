@@ -43,25 +43,16 @@ class PlayerHasTeam
         $requeteInsertion->execute();
     }
 
-        static function selectTargetPlayerHasTeam(int $player_id): array
+    static function selectTargetPlayerHasTeam(int $player_id, Player $player): array
     {
         global $connexion;
 
-        $selectTargetPlayerHasTeam = $connexion->prepare('SELECT * FROM player_has_team WHERE player_id = :id');
+        $selectTargetPlayerHasTeam = $connexion->prepare('SELECT name, role FROM team  JOIN player_has_team pht on pht.team_id = team.id WHERE player_id = :id');
         $selectTargetPlayerHasTeam->bindParam('id', $player_id);
         $selectTargetPlayerHasTeam->execute();
-        $theTeams = $selectTargetPlayerHasTeam->fetchAll(\PDO::FETCH_ASSOC);
-        var_dump($theTeams);
-        $teamsOfPlayer = [];
+        $theTeamsName = $selectTargetPlayerHasTeam->fetchAll(\PDO::FETCH_ASSOC);
 
-        foreach ($theTeams as $theTeam) {
-            $players[] = new PlayerHasTeam(
-                $theTeam["name"],
-                $theTeam["id"],
-            );
-        }
-
-        return $teamsOfPlayer;
+        return $theTeamsName;
     }
 
 
