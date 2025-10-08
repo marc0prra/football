@@ -47,14 +47,29 @@ class PlayerHasTeam
     {
         global $connexion;
 
-        $selectTargetPlayerHasTeam = $connexion->prepare('SELECT name, role FROM team  JOIN player_has_team pht on pht.team_id = team.id WHERE player_id = :id');
+        $selectTargetPlayerHasTeam = $connexion->prepare('SELECT t.id, name, role FROM team t JOIN player_has_team pht on pht.team_id = t.id WHERE pht.player_id = :id');
         $selectTargetPlayerHasTeam->bindParam('id', $player_id);
         $selectTargetPlayerHasTeam->execute();
-        $theTeamsName = $selectTargetPlayerHasTeam->fetchAll(\PDO::FETCH_ASSOC);
+        $playersHasTeamsData = $selectTargetPlayerHasTeam->fetchAll(\PDO::FETCH_ASSOC);
 
-        return $theTeamsName;
+
+        $playersHasTeams = [];
+        $counter = 0;
+        foreach ($playersHasTeamsData as $playerHasTeamData) {
+            $teamsPlayer = new Team(
+                $playerHasTeamData["name"],
+                $playerHasTeamData["id"]
+            );
+
+            $playersHasTeams[] = new PlayerHasTeam(
+                $player,
+                $teamsPlayer,
+                $playerHasTeamData["role"]
+            );
+            $counter = $counter+1;
+        }
+
+        var_dump($playersHasTeams[1]->team->getName());
+        return $playersHasTeams;
     }
-
-
-
 }
