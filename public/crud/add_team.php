@@ -1,9 +1,10 @@
 <?php //Objectif : Ajout d'équipes dans la BDD
 include_once("index.php");
 use src\Model\Team;
+use src\Model\DatabaseManager;
 // Vérifier qu'on est en POST
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
-    $infos = returnArray($_POST);
+    $infos = DatabaseManager::returnArray($_POST);
     if (!isset($infos["errors"])) {
         //Tout les champs sont remplis ? On peut insérer en BDD
         $team = new Team($infos["team"]);

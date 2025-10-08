@@ -1,4 +1,6 @@
 <?php
+
+use src\Model\DatabaseManager;
 include_once("index.php");
 use src\Model\Player;
 use src\Model\Team;
@@ -20,7 +22,7 @@ $types = ["Attaquant", "Milieu", "Défenseur", "Gardien"];
 
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
-    $infos->returnArray($_POST);
+    $infos = DatabaseManager::returnArray($_POST);
 
     if (!isset($infos["errors"])) {
         if (isset($infos["firstname"])) {
@@ -69,16 +71,6 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="fr">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modifier joueur</title>
-    <link rel="stylesheet" href="includes/style.css?v=3">
-</head>
-
 <body>
     <div class="row gap5">
         <div>
@@ -116,8 +108,8 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
             <?php endif; ?>
             <?php if (!empty($theTeamsName)): ?>
                 <ul>
-                    <?php foreach ($theTeamsName as $theTeam): ?>
-                        <li><?= htmlspecialchars($theTeam["name"]) ?> : <?= htmlspecialchars($theTeam["role"]) ?>
+                    <?php foreach ($theTeamsName as $key => $theTeam): ?>
+                        <li><?= htmlspecialchars($theTeam->getTeamName()) ?> : <?= htmlspecialchars($theTeam->getRole()) ?>
                         </li>
                     <?php endforeach; ?>
                 </ul>

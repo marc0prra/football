@@ -29,6 +29,10 @@ class PlayerHasTeam
         return $this->team->getId();
     }
 
+    public function getTeamName(){
+        return $this->team->getName();
+    }
+
     public function insertPlayerHasTeam()
     {
         global $connexion;

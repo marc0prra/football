@@ -1,9 +1,10 @@
 <?php
 include_once("../index.php");
+use src\Model\DatabaseManager;
 use src\Model\Player;
 // Vérifier qu'on est en POST
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
-    $infos = returnArray($_POST);
+    $infos = DatabaseManager::returnArray($_POST);
     if (!isset($infos["errors"])) {
         //Tout les champs sont remplis ? On peut insérer en BDD
         $player = new Player(
@@ -12,7 +13,9 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             $infos["date_de_naissance"],
             $infos["photo"]
         );
-        $player->insertPlayer();
+
+        $dbManager = new DatabaseManager($connexion);
+        $dbManager->insertPlayer($player);
         $infos = "";
         $_SESSION['success'] = "Le joueur a bien été ajouté !";
         header("Location: " . $_SERVER['PHP_SELF']);

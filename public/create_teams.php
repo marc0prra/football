@@ -3,11 +3,14 @@ include_once("index.php");
 use src\Model\PlayerHasTeam;
 use src\Model\Player;
 use src\Model\Team;
-$players = Player::selectPlayers();
+use src\Model\DatabaseManager;
+
+$dbManager = new DatabaseManager($connexion);
+$players = $dbManager->selectPlayers();
 $teams = Team::selectTeams();
 $types = ["Attaquant", "Milieu", "Défenseur", "Gardien"];
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
-    $infos = returnArray($_POST);
+    $infos = DatabaseManager::returnArray($_POST);
     if (!isset($infos["errors"])) {
         //Tout les champs sont remplis ? On peut insérer en BDD
         $playHasTeam = new PlayerHasTeam(

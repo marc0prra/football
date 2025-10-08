@@ -2,8 +2,10 @@
 session_start();
 include_once("./index.php");
 use src\Model\OpposingClub;
+use src\Model\DatabaseManager;
+
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
-    $infos = returnArray($_POST);
+    $infos = DatabaseManager::returnArray($_POST);
     if (!isset($infos["errors"])) {
         $opposingClub = new OpposingClub(
             $infos["adresse"],
