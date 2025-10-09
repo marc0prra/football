@@ -1,6 +1,6 @@
 <?php
 session_start();
-include_once("./index.php");
+include_once("../index.php");
 use src\Model\OpposingClub;
 use src\Model\DatabaseManager;
 
@@ -29,14 +29,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     </div>
 <?php endif; ?>
 
-<!DOCTYPE html>
-<html lang="fr">
-
-<head>
-    <meta charset="UTF-8">
-    <title>Ajouter un équipe opposante</title>
-</head>
-
 <form action="" method="post">
     <p class="error">
         <?php echo isset($infos["errors"]["ville"]) ? $infos["errors"]["ville"] : "" ?>
@@ -51,7 +43,3 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     <button type="submit">Créer équipe opposé</button>
 
 </form>
-
-<?php
-require_once(__DIR__ . '/../../includes/footer.php');
-?>

@@ -91,4 +91,26 @@ class Player
 
         return $player;
     }
+
+    static function updatePlayer(Player $playerPost, string $player_id)
+    {
+        global $connexion;
+        $firstName = $playerPost->getFirstname();
+        $lastName = $playerPost->getLastname();
+        $birthDate = $playerPost->getBirthdate()->format('Y-m-d H:i:s');
+        $picture = $playerPost->getPicture();
+
+        // --- Mise à jour des infos du joueur en BD ---
+        $requeteUpdate = $connexion->prepare(
+            'UPDATE player 
+            SET firstname = :firstname, lastname = :lastname, birthdate = :birthdate, picture = :picture
+            WHERE id = :id'
+        );
+        $requeteUpdate->bindParam('id', $player_id);
+        $requeteUpdate->bindParam('firstname', $firstName);
+        $requeteUpdate->bindParam('lastname', $lastName);
+        $requeteUpdate->bindParam('birthdate', $birthDate);
+        $requeteUpdate->bindParam('picture', $picture);
+        $requeteUpdate->execute();
+    }
 }

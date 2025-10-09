@@ -9,10 +9,9 @@ use src\Model\DatabaseManager;
 $teams = Team::selectTeams();
 $clubs = OpposingClub::selectClubs();
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
-    $infos =  DatabaseManager::returnArray($_POST);
+    $infos = DatabaseManager::returnArray($_POST);
     if (!isset($infos["errors"])) {
         $match = new Matchs();
 
     }
 }
-

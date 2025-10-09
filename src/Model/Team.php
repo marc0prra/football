@@ -54,4 +54,23 @@ class Team
         $requeteInsertion->execute();
 
     }
+
+    static function selectTargetTeam(string $team_id):Team
+    {
+        global $connexion;
+        $requeteSelection = $connexion->prepare(
+            'SELECT * FROM team WHERE id = :id'
+        );
+        $requeteSelection->bindParam('id', $team_id);
+        $requeteSelection->execute();
+        $theTeamData = $requeteSelection->fetchAll(\PDO::FETCH_ASSOC);
+
+        var_dump($theTeamData);
+        $targetTeam = new Team(
+            $theTeamData[0]["name"],
+            $theTeamData[0]["id"]
+        );
+
+        return $targetTeam;
+    }
 }

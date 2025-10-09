@@ -1,22 +1,23 @@
 <?php
 
 namespace src\Model;
+use src\Model\PlayerRole;
 
 class PlayerHasTeam
 {
-    private string $role; // attaquant, milieu, défenseur, gardien
+    private PlayerRole $role; // attaquant, milieu, défenseur, gardien
     private Player $player;
     private Team $team;
-    public function __construct(Player $player, Team $team, string $role)
+    public function __construct(Player $player, Team $team, PlayerRole|string $role)
     {
         $this->player = $player;
         $this->team = $team;
-        $this->role = $role;
+        $this->role = $role instanceof PlayerRole ? $role : PlayerRole::from($role);
     }
 
     public function getRole(): string
     {
-        return $this->role;
+        return $this->role->value;
     }
 
     public function getPlayer(): int
@@ -29,7 +30,8 @@ class PlayerHasTeam
         return $this->team->getId();
     }
 
-    public function getTeamName(){
+    public function getTeamName()
+    {
         return $this->team->getName();
     }
 
@@ -70,10 +72,9 @@ class PlayerHasTeam
                 $teamsPlayer,
                 $playerHasTeamData["role"]
             );
-            $counter = $counter+1;
+            $counter = $counter + 1;
         }
 
-        var_dump($playersHasTeams[1]->team->getName());
         return $playersHasTeams;
     }
 }

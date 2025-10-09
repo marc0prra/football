@@ -69,7 +69,3 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     <button type="submit">Ajouter à l'équipe</button>
 </form>
-
-<?php
-require_once(__DIR__ . '/../includes/footer.php');
-?>

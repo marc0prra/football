@@ -1,6 +1,7 @@
 <?php
 
 namespace src\Model;
+use src\Model\PlayerRole;
 
 
 class DatabaseManager
@@ -85,6 +86,11 @@ class DatabaseManager
                 $infos["errors"][$keyInfo] = "Veuillez renseigner " . $keyInfo;
             }
         }
+
+
+        if (isset($infos["position"]) && (PlayerRole::tryFrom($infos["position"]) == null)) {
+            $infos["errors"]["position"] = "Position incorrect";
+        }
         return $infos;
     }
 
@@ -112,7 +118,7 @@ class DatabaseManager
         }
         return $players;
     }
-    
+
     public function selectClubs(): array
     {
         $requeteSelection = $this->connexion->prepare(

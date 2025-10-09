@@ -5,6 +5,7 @@ include_once("index.php");
 use src\Model\Player;
 use src\Model\Team;
 use src\Model\PlayerHasTeam;
+use src\Model\PlayerRole;
 
 // --- Vérification de l'ID ---
 if (isset($_GET['id'])) {
@@ -18,7 +19,7 @@ if (isset($_GET['id'])) {
 }
 
 // --- !!!!! A tansformer en énumérations dans la classe PlayerHasTeam !!!!! ---
-$types = ["Attaquant", "Milieu", "Défenseur", "Gardien"];
+$types = PlayerRole::cases();
 
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
@@ -26,6 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
     if (!isset($infos["errors"])) {
         if (isset($infos["firstname"])) {
+
             $playerPost = new Player(
                 $infos["firstname"],
                 $infos["lastname"],
@@ -33,36 +35,24 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                 $infos["picture"]
             );
 
-            $firstName = $playerPost->getFirstname();
-            $lastName = $playerPost->getLastname();
-            $birthDate = $playerPost->getBirthdate()->format('Y-m-d H:i:s');
-            $picture = $playerPost->getPicture();
-
-            // --- Mise à jour des infos du joueur en BD ---
-            $requeteUpdate = $connexion->prepare(
-                'UPDATE player 
-            SET firstname = :firstname, lastname = :lastname, birthdate = :birthdate, picture = :picture
-            WHERE id = :id'
-            );
-            $requeteUpdate->bindParam('id', $player_id);
-            $requeteUpdate->bindParam('firstname', $firstName);
-            $requeteUpdate->bindParam('lastname', $lastName);
-            $requeteUpdate->bindParam('birthdate', $birthDate);
-            $requeteUpdate->bindParam('picture', $picture);
-            $requeteUpdate->execute();
+            Player::updatePlayer($playerPost, $player_id);
 
             $_SESSION['joueur'] = "Le joueur a bien modifié !";
             header("Location: " . $_SERVER['PHP_SELF'] . "?id=" . $player_id);
             exit;
         }
 
-        if (isset($infos["joueur"])) {
+        if (isset($infos["joueur"]) && !isset($infos["errors"]["position"])) {
+            $targetTeam = Team::selectTargetTeam($infos["équipe"]);
+
             $teamAssignment = new PlayerHasTeam(
-                $infos["joueur"],
-                $infos["équipe"],
+                $player,
+                $targetTeam,
                 $infos["position"]
             );
-            $db->insertPlayerHasTeam($teamAssignment);
+
+            $dbManager = new DatabaseManager($connexion);
+            $dbManager->insertPlayerHasTeam($teamAssignment);
             $_SESSION['equipe'] = "Le joueur a bien été assigné à une équipe !";
             header("Location: " . $_SERVER['PHP_SELF'] . "?id=" . $player_id);
             exit;
@@ -127,8 +117,9 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
                 <label for="select-type">Choisissez une position pour le joueur</label><br>
                 <select name="position" id="position">
+                    <option value="none">--------</option>
                     <?php foreach ($types as $type): ?>
-                        <option value="<?= htmlspecialchars($type) ?>"><?= htmlspecialchars($type) ?></option>
+                        <option value="<?= htmlspecialchars($type->name) ?>"><?= htmlspecialchars($type->value) ?></option>
                     <?php endforeach; ?>
                 </select><br><br>
 
@@ -141,6 +132,3 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 </body>
 
 </html>
-<?php
-require_once(__DIR__ . '/../includes/footer.php');
-?>
