@@ -1,17 +1,15 @@
 <?php
 // on inclus index.php, l'autoloader et la bdd
 include("index.php");
-require_once __DIR__ . "/includes/autoloader.php";
-Autoloader::register();
 
-require_once __DIR__ . "/includes/database.php";
 
 use src\Model\DatabaseManager;
+use src\Model\Team;
 $db = new DatabaseManager($connexion);
 
 // Récupération des objets
 $players = $db->selectPlayers();
-$teams = $db->selectTeams();
+$teams = Team::selectTeams();
 $clubs = $db->selectClubs();
 
 ?>

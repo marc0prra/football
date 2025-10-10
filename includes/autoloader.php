@@ -6,7 +6,7 @@ class Autoloader
     {
         spl_autoload_register(function ($class) {
 
-            $file = '..' . DIRECTORY_SEPARATOR . str_replace('\\', DIRECTORY_SEPARATOR, $class) . '.php';
+            $file = dirname(__DIR__) . DIRECTORY_SEPARATOR . str_replace('\\', DIRECTORY_SEPARATOR, $class) . '.php';
 
             if (file_exists($file)) {
                 require $file;

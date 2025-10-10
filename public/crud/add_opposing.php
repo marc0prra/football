@@ -1,15 +1,17 @@
 <?php
 session_start();
-include_once("includes/header.php");
-include_once("index.php");
+include_once("../index.php");
+use src\Model\OpposingClub;
+use src\Model\DatabaseManager;
+
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
-    $infos = returnArray($_POST);
+    $infos = DatabaseManager::returnArray($_POST);
     if (!isset($infos["errors"])) {
         $opposingClub = new OpposingClub(
             $infos["adresse"],
             $infos["ville"],
         );
-        insertClub($opposingClub);
+        $opposingClub->insertClub();
         $infos = "";
         $_SESSION['success'] = "Le club opposé a bien été ajouté !";
         header("Location: " . $_SERVER['PHP_SELF']);
@@ -26,14 +28,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         ?>
     </div>
 <?php endif; ?>
-
-<!DOCTYPE html>
-<html lang="fr">
-
-<head>
-    <meta charset="UTF-8">
-    <title>Ajouter un équipe opposante</title>
-</head>
 
 <form action="" method="post">
     <p class="error">
