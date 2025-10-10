@@ -13,10 +13,10 @@ class Player
     private string $picture;
 
     public function __construct(
-        string $firstname = "",
-        string $lastname = "",
-        DateTime|string $birthdate = "2000-01-01",
-        string $picture = "",
+        string $firstname,
+        string $lastname,
+        DateTime|string $birthdate,
+        string $picture,
         ?int $id = null
     ) {
         $this->id = $id;
@@ -68,5 +68,49 @@ class Player
     public function setPicture(string $picture): void
     {
         $this->picture = $picture;
+    }
+
+    static function selectTargetPlayer(int $player_id): Player
+    {
+        global $connexion;
+        $requeteSelection = $connexion->prepare(
+            'SELECT * FROM player
+            WHERE id = :id'
+        );
+        $requeteSelection->bindParam('id', $player_id);
+        $requeteSelection->execute();
+        $getThePlayer = $requeteSelection->fetchAll(\PDO::FETCH_ASSOC);
+
+        $player = new Player(
+            $getThePlayer[0]["firstname"],
+            $getThePlayer[0]["lastname"],
+            $getThePlayer[0]["birthdate"],
+            $getThePlayer[0]["picture"],
+            $getThePlayer[0]["id"]
+        );
+
+        return $player;
+    }
+
+    static function updatePlayer(Player $playerPost, string $player_id)
+    {
+        global $connexion;
+        $firstName = $playerPost->getFirstname();
+        $lastName = $playerPost->getLastname();
+        $birthDate = $playerPost->getBirthdate()->format('Y-m-d H:i:s');
+        $picture = $playerPost->getPicture();
+
+        // --- Mise à jour des infos du joueur en BD ---
+        $requeteUpdate = $connexion->prepare(
+            'UPDATE player 
+            SET firstname = :firstname, lastname = :lastname, birthdate = :birthdate, picture = :picture
+            WHERE id = :id'
+        );
+        $requeteUpdate->bindParam('id', $player_id);
+        $requeteUpdate->bindParam('firstname', $firstName);
+        $requeteUpdate->bindParam('lastname', $lastName);
+        $requeteUpdate->bindParam('birthdate', $birthDate);
+        $requeteUpdate->bindParam('picture', $picture);
+        $requeteUpdate->execute();
     }
 }

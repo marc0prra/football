@@ -1,24 +1,17 @@
 <?php //Objectif : Ajout d'équipes dans la BDD
-include_once("includes/header.php");
-include_once("index.php");
+include_once("../index.php");
+use src\Model\Team;
+use src\Model\DatabaseManager;
 // Vérifier qu'on est en POST
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
-    $infos = returnArray($_POST);
+    $infos = DatabaseManager::returnArray($_POST);
     if (!isset($infos["errors"])) {
         //Tout les champs sont remplis ? On peut insérer en BDD
         $team = new Team($infos["team"]);
-        insertTeam($team);
+        $team->insertTeam();
     }
 }
 ?>
-
-<!DOCTYPE html>
-<html lang="fr">
-
-<head>
-    <meta charset="UTF-8">
-    <title>Ajouter une équipe</title>
-</head>
 
 <form action="" method="post">
     <?php if (isset($errors)) {
@@ -32,7 +25,3 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     <button type="submit">Add Player</button>
 </form>
-
-<?php
-include_once("includes/footer.php");
-?>

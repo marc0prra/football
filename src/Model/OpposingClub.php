@@ -28,4 +28,39 @@ class OpposingClub
     {
         return $this->address;
     }
+
+    public function insertClub(): void
+    {
+        global $connexion;
+        $city = $this->getCity();
+        $adress = $this->getAddress();
+
+        $requeteInsertion = $connexion->prepare('INSERT INTO opposing_club (adress, city) VALUES (:adress, :city)');
+        $requeteInsertion->bindParam('adress', $adress);
+        $requeteInsertion->bindParam('city', $city);
+        $requeteInsertion->execute();
+
+    }
+
+    static function selectClubs(): array
+    {
+        global $connexion;
+        $requeteSelection = $connexion->prepare(
+            'SELECT * FROM opposing_club'
+        );
+        $requeteSelection->execute();
+        $theClubs = $requeteSelection->fetchAll(\PDO::FETCH_ASSOC);
+
+        $counter = 1;
+        $clubs = [];
+
+        foreach ($theClubs as $theClub) {
+            $clubs[$counter] = new OpposingClub(
+                $theClub["adress"],
+                $theClub["city"]
+            );
+            $counter++;
+        }
+        return $clubs;
+    }
 }

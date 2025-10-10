@@ -1,20 +1,25 @@
 <?php
-session_start();
-include_once("includes/header.php");
-include_once("index.php");
+include_once("../index.php");
+use src\Model\DatabaseManager;
+use src\Model\Player;
+
 // Vérifier qu'on est en POST
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
-    $infos = returnArray($_POST);
+    $infos = DatabaseManager::returnArray($_POST);
     if (!isset($infos["errors"])) {
+
         //Tout les champs sont remplis ? On peut insérer en BDD
         $player = new Player(
             $infos["prenom"],
             $infos["nom_de_famille"],
-            new DateTime($infos["date_de_naissance"]),
+            $infos["date_de_naissance"],
             $infos["photo"]
         );
-        insertPlayer($player);
+
+        $dbManager = new DatabaseManager($connexion);
+        $dbManager->insertPlayer($player);
         $infos = "";
+
         $_SESSION['success'] = "Le joueur a bien été ajouté !";
         header("Location: " . $_SERVER['PHP_SELF']);
         exit;
@@ -29,14 +34,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         ?>
     </div>
 <?php endif; ?>
-
-<!DOCTYPE html>
-<html lang="fr">
-
-<head>
-    <meta charset="UTF-8">
-    <title>Ajouter un joueur</title>
-</head>
 
 <form action="" method="post">
     <p class="error"><?php echo isset($infos["errors"]["prenom"]) ? $infos["errors"]["prenom"] : "" ?></p>
@@ -61,7 +58,3 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     <button type="submit">Ajouter joueur</button>
 
 </form>
-
-<?php
-include_once("includes/footer.php");
-?>

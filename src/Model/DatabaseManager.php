@@ -1,6 +1,7 @@
 <?php
 
 namespace src\Model;
+use src\Model\PlayerRole;
 
 
 class DatabaseManager
@@ -85,6 +86,11 @@ class DatabaseManager
                 $infos["errors"][$keyInfo] = "Veuillez renseigner " . $keyInfo;
             }
         }
+
+
+        if (isset($infos["position"]) && (PlayerRole::tryFrom($infos["position"]) == null)) {
+            $infos["errors"]["position"] = "Position incorrect";
+        }
         return $infos;
     }
 
@@ -111,28 +117,6 @@ class DatabaseManager
             $counter++;
         }
         return $players;
-    }
-
-    public function selectTeams(): array
-    {
-        $requeteSelection = $this->connexion->prepare(
-            'SELECT * FROM team t
-             LEFT JOIN player_has_team pht ON pht.team_id = t.id ORDER BY name'
-        );
-        $requeteSelection->execute();
-        $theTeams = $requeteSelection->fetchAll(\PDO::FETCH_ASSOC);
-
-        $counter = 1;
-        $teams = [];
-
-        foreach ($theTeams as $theTeam) {
-            $teams[$counter] = new Team(
-                $theTeam["name"],
-                id: $theTeam["id"]
-            );
-            $counter++;
-        }
-        return $teams;
     }
 
     public function selectClubs(): array
