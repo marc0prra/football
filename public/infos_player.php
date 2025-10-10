@@ -1,4 +1,5 @@
 <?php
+// on inclus index.php, l'autoloader et la bdd
 include("index.php");
 require_once __DIR__ . "/includes/autoloader.php";
 Autoloader::register();
@@ -36,6 +37,7 @@ $clubs = $db->selectClubs();
 
 
         <?php
+        //affiche les clubs du joueur
         $teamName = "Aucun club";
         foreach ($teams as $team) {
             $req = $connexion->prepare(
@@ -52,7 +54,7 @@ $clubs = $db->selectClubs();
         <p>Club : <?= htmlspecialchars($teamName) ?></p>
 
         <?php
-        // Afficher les matchs de l'équipe du joueur
+        // affiche les matchs de l'équipe du joueur
         if ($teamName !== "Aucun club") {
             $matchs = $connexion->prepare(
                 "SELECT m.date, m.team_score, m.opponent_score, oc.city
