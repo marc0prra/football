@@ -257,3 +257,76 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+-- Insertion des clubs adverses
+INSERT INTO `opposing_club` (`adress`, `city`) VALUES
+('Stadio San Siro, Via Piccolomini 5', 'Milan'),
+('Emirates Stadium, Hornsey Road', 'Londres'),
+('Signal Iduna Park, Strobelallee 50', 'Dortmund'),
+('Allianz Stadium, Corso Gaetano Scirea 50', 'Turin'),
+('Wanda Metropolitano, Av. de Luis Aragonés', 'Madrid'),
+('Old Trafford, Sir Matt Busby Way', 'Manchester'),
+('Parc des Princes, Avenue du Parc des Princes', 'Paris'),
+('Anfield Road, Anfield', 'Liverpool');
+
+-- Insertion de quelques matchs
+INSERT INTO `matchs` (`team_score`, `opponent_score`, `date`, `team_id`, `city`, `opposing_club_id`) VALUES
+(3, 1, '2025-03-12 20:45:00', 1, 'Madrid', 1), -- Real Madrid vs AC Milan
+(2, 2, '2025-04-05 21:00:00', 2, 'Barcelone', 2), -- Barça vs Arsenal
+(1, 3, '2025-02-15 18:00:00', 5, 'Munich', 3), -- Bayern vs Dortmund
+(4, 0, '2025-01-28 20:30:00', 4, 'Paris', 4), -- PSG vs Juventus
+(2, 1, '2025-05-07 21:00:00', 7, 'Liverpool', 5), -- Liverpool vs Atlético Madrid
+(0, 2, '2025-03-21 20:00:00', 3, 'Manchester', 6), -- Man Utd vs Old Trafford (symbolique)
+(3, 3, '2025-04-30 19:00:00', 12, 'Manchester', 7), -- Man City vs PSG
+(5, 1, '2025-06-10 21:30:00', 9, 'Milan', 8); -- AC Milan vs Liverpool
+
+-- Insertion des associations joueurs/équipes
+INSERT INTO `player_has_team` (`player_id`, `team_id`, `role`) VALUES
+(13, 2, 'Attaquant'), -- Messi → Barça
+(14, 3, 'Attaquant'), -- Ronaldo → Man United
+(15, 4, 'Attaquant'), -- Mbappé → PSG
+(16, 5, 'Attaquant'), -- Haaland → Bayern
+(17, 12, 'Milieu'), -- De Bruyne → Man City
+(18, 4, 'Ailier'), -- Neymar → PSG
+(19, 1, 'Défenseur'), -- Ramos → Real Madrid
+(20, 7, 'Défenseur'), -- Van Dijk → Liverpool
+(21, 1, 'Milieu'), -- Modric → Real Madrid
+(22, 7, 'Attaquant'), -- Salah → Liverpool
+(23, 11, 'Attaquant'), -- Kane → Tottenham
+(24, 6, 'Milieu'), -- Pogba → Juventus
+(25, 5, 'Attaquant'), -- Lewandowski → Bayern
+(26, 1, 'Attaquant'), -- Benzema → Real Madrid
+(27, 5, 'Milieu offensif'), -- Muller → Bayern
+(28, 8, 'Ailier'), -- Sterling → Chelsea
+(29, 7, 'Ailier'), -- Mané → Liverpool
+(30, 3, 'Milieu'), -- Bruno Fernandes → Man United
+(31, 1, 'Milieu'), -- Kroos → Real Madrid
+(32, 5, 'Milieu défensif'), -- Kimmich → Bayern
+(33, 7, 'Défenseur droit'), -- Alexander-Arnold → Liverpool
+(34, 7, 'Gardien'), -- Alisson → Liverpool
+(35, 12, 'Gardien'), -- Ederson → Man City
+(36, 14, 'Gardien'), -- Oblak → Atlético
+(37, 2, 'Gardien'), -- Ter Stegen → Barça
+(38, 15, 'Milieu'), -- Raúl García → Real Sociedad
+(39, 14, 'Ailier droit'), -- Bale → Atlético
+(40, 13, 'Ailier'), -- Sancho → Dortmund
+(41, 12, 'Milieu offensif'), -- Foden → Man City
+(42, 1, 'Ailier gauche'); -- Vinicius → Real Madrid
+
+-- Insertion des membres du staff
+INSERT INTO `staff_member` (`first_name`, `last_name`, `picture`, `role`) VALUES
+('Carlo', 'Ancelotti', 'ancelotti.jpg', 'Entraîneur principal'),
+('Pep', 'Guardiola', 'guardiola.jpg', 'Entraîneur principal'),
+('Jürgen', 'Klopp', 'klopp.jpg', 'Entraîneur principal'),
+('Xavi', 'Hernandez', 'xavi.jpg', 'Entraîneur principal'),
+('Erik', 'ten Hag', 'tenhag.jpg', 'Entraîneur principal'),
+('Thomas', 'Tuchel', 'tuchel.jpg', 'Entraîneur principal'),
+('Mauricio', 'Pochettino', 'pochettino.jpg', 'Entraîneur principal'),
+('Massimiliano', 'Allegri', 'allegri.jpg', 'Entraîneur principal'),
+('Didier', 'Deschamps', 'deschamps.jpg', 'Sélectionneur'),
+('Zinedine', 'Zidane', 'zidane.jpg', 'Adjoint technique'),
+('Antonio', 'Conte', 'conte.jpg', 'Entraîneur adjoint'),
+('José', 'Mourinho', 'mourinho.jpg', 'Consultant tactique'),
+('Hansi', 'Flick', 'flick.jpg', 'Entraîneur principal'),
+('Luis', 'Enrique', 'enrique.jpg', 'Sélectionneur'),
+('Julian', 'Nagelsmann', 'nagelsmann.jpg', 'Entraîneur principal');

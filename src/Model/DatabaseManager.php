@@ -139,4 +139,16 @@ class DatabaseManager
         }
         return $clubs;
     }
+
+    public function deletePlayer(int $id): void
+    {
+        // Supprimer d'abord les liens éventuels
+        $this->connexion->prepare('DELETE FROM player_has_team WHERE player_id = :id')
+            ->execute(['id' => $id]);
+
+        // Puis supprimer le joueur
+        $requete = $this->connexion->prepare('DELETE FROM player WHERE id = :id');
+        $requete->execute(['id' => $id]);
+    }
+
 }
