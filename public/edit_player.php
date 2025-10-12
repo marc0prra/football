@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 ?>
 
 <body>
-    <div class="row gap5">
+    <div class="row gap6">
         <div>
             <h1>Modifier le joueur</h1>
             <?php if (isset($_SESSION['joueur'])): ?>
