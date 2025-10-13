@@ -9,8 +9,12 @@ body {
   padding: 2rem;
 }
 
-.gap5{
-    gap: 5vw;
+.gap5 {
+  gap: 5vw;
+}
+
+.gap6 {
+  gap: 8vw;
 }
 
 h1,
@@ -135,7 +139,7 @@ a.button:hover {
   --color-accent: #bfa46f; /* doré doux pour la “luxury vibe” */
   --color-text: #333;
   --radius: 12px;
-  --transition: 0.3s ease;
+  --transition: 0.5s ease;
 }
 
 /************************* infos_player *************************/
@@ -164,7 +168,37 @@ a.button:hover {
   font-size: large;
 }
 
-.row{
-    display: flex;
-    flex-direction: row;
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+/************************* HEADER *************************/
+.row.gap5 {
+  justify-content: center;
+  align-items: center;
+  background: var(--color-primary);
+  padding: 1rem 2rem;
+  border-radius: var(--radius);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.row.gap5 a {
+  color: #fff;
+  font-weight: 500;
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+  padding: 0.6rem 1rem;
+  border-radius: var(--radius);
+  background: transparent;
+  transition: background var(--transition), transform var(--transition);
+  transition: 0.5s;
+}
+
+.row.gap5 a:hover {
+  background: var(--color-accent);
+  color: var(--color-primary);
+  transform: translateY(-2px);
+  text-decoration: none;
+  transition: 0.5s;
 }
