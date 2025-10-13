@@ -37,31 +37,6 @@ class DatabaseManager
 
         $player->setId((int) $this->connexion->lastInsertId());
     }
-
-    public function insertTeam(Team $team): void
-    {
-        $nom = $team->getName();
-
-        $requeteInsertion = $this->connexion->prepare(
-            'INSERT INTO team (name) VALUES (:team)'
-        );
-        $requeteInsertion->bindParam('team', $nom);
-        $requeteInsertion->execute();
-    }
-
-    public function insertClub(OpposingClub $opposingClub): void
-    {
-        $city = $opposingClub->getCity();
-        $adress = $opposingClub->getAddress();
-
-        $requeteInsertion = $this->connexion->prepare(
-            'INSERT INTO opposing_club (adress, city) VALUES (:adress, :city)'
-        );
-        $requeteInsertion->bindParam('adress', $adress);
-        $requeteInsertion->bindParam('city', $city);
-        $requeteInsertion->execute();
-    }
-
     public function insertPlayerHasTeam(PlayerHasTeam $playerHasTeam): void
     {
         $playerId = $playerHasTeam->getPlayer();
@@ -86,7 +61,6 @@ class DatabaseManager
                 $infos["errors"][$keyInfo] = "Veuillez renseigner " . $keyInfo;
             }
         }
-
 
         if (isset($infos["position"]) && (PlayerRole::tryFrom($infos["position"]) == null)) {
             $infos["errors"]["position"] = "Position incorrect";
