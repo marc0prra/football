@@ -142,13 +142,35 @@ class DatabaseManager
 
     public function deletePlayer(int $id): void
     {
-        // Supprimer d'abord les liens éventuels
         $this->connexion->prepare('DELETE FROM player_has_team WHERE player_id = :id')
             ->execute(['id' => $id]);
 
-        // Puis supprimer le joueur
         $requete = $this->connexion->prepare('DELETE FROM player WHERE id = :id');
         $requete->execute(['id' => $id]);
+    }
+
+    public function selectStaffMembers(): array
+    {
+        $requeteSelection = $this->connexion->prepare(
+            'SELECT * FROM staff_member'
+        );
+        $requeteSelection->execute();
+        $theStaffMembers = $requeteSelection->fetchAll(\PDO::FETCH_ASSOC);
+
+        $counter = 1;
+        $staffMembers = [];
+
+        foreach ($theStaffMembers as $theStaffMember) {
+            $staffMembers[$counter] = new StaffMember(
+                $theStaffMember["id"],
+                $theStaffMember["first_name"],
+                $theStaffMember["last_name"],
+                $theStaffMember["picture"],
+                $theStaffMember["role"]
+            );
+            $counter++;
+        }
+        return $staffMembers;
     }
 
 }
