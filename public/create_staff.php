@@ -1,12 +1,10 @@
 <?php
 include_once("index.php");
-use src\Model\PlayerHasTeam;
-use src\Model\Player;
-use src\Model\Team;
+use src\Model\StaffMember;
 use src\Model\DatabaseManager;
 
 $dbManager = new DatabaseManager($connexion);
-$players = $dbManager->selectPlayers();
+$players = $dbManager->selectStaffMembers();
 $teams = Team::selectTeams();
 $types = ["Attaquant", "Milieu", "Défenseur", "Gardien"];
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
@@ -22,9 +20,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $_SESSION['success'] = "Le joueur a bien été assigné à une équipe !";
         header("Location: " . $_SERVER['PHP_SELF']);
         exit;
-    }
-}
-
 ?>
 <?php if (isset($_SESSION['success'])): ?>
     <div class="success">

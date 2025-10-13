@@ -24,7 +24,8 @@
         <a href="/php/football/public/crud/add_player.php">Nouveau joueur</a>
         <a href="/php/football/public/crud/add_team.php">Nouvelle équipe</a>
         <a href="/php/football/public/crud/add_opposing.php">Nouveau club adverse</a>
-        <a href="/php/football/public/create_match.php">Consulter les matchs</a>
+        <a href="/php/football/public/create_match.php">Nouveau match</a>
+        <a href="/php/football/public/create_staff.php">Nouveau membre du staff</a>
     </div>
 
 </header>
