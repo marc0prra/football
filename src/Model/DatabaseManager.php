@@ -166,13 +166,12 @@ class DatabaseManager
         global $connexion;
         $stmt = $connexion->prepare("
         UPDATE staff_member
-        SET first_name = :firstname, last_name = :lastname, picture = :picture, role = :role
+        SET first_name = :firstname, last_name = :lastname, role = :role
         WHERE id = :id
     ");
         $stmt->execute([
             ':firstname' => $staff->getFirstname(),
             ':lastname' => $staff->getLastname(),
-            ':picture' => $staff->getPicture(),
             ':role' => $staff->getRole(),
             ':id' => $id
         ]);
