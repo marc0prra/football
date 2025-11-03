@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             <div class="column">
                 <p class="error"><?php echo isset($infos["errors"]["joueur"]) ? $infos["errors"]["joueur"] : "" ?></p>
                 <label for="select-player">Choisissez un joueur</label><br>
-                <input type="" id="date-match" name="date-match" required><br><br>
+                <input type="text" id="date-match" name="date-match" required class=""><br><br>
             </div><br><br>
             <div class="column">
                 <p class="error"><?php echo isset($infos["errors"]["équipe"]) ? $infos["errors"]["équipe"] : "" ?></p>

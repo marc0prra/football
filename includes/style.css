@@ -209,3 +209,13 @@ a.button:hover {
   text-decoration: none;
   transition: 0.5s;
 }
+
+.inputMatch {
+  margin-right: 100px;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  margin-right: 30px;
+}
