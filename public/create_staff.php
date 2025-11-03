@@ -1,65 +1,110 @@
 <?php
-include_once("index.php");
-use src\Model\StaffMember;
-use src\Model\DatabaseManager;
+include("index.php");
 
-$dbManager = new DatabaseManager($connexion);
-$players = $dbManager->selectStaffMembers();
-$teams = Team::selectTeams();
-$types = ["Attaquant", "Milieu", "Défenseur", "Gardien"];
-if ($_SERVER['REQUEST_METHOD'] == "POST") {
-    $infos = DatabaseManager::returnArray($_POST);
-    if (!isset($infos["errors"])) {
-        $playHasTeam = new PlayerHasTeam(
-            $infos["joueur"],
-            $infos["équipe"],
-            $infos["position"]
-        );
-        $playHasTeam->insertPlayerHasTeam();
-        $infos = "";
-        $_SESSION['success'] = "Le joueur a bien été assigné à une équipe !";
+use src\Model\DatabaseManager;
+use src\Model\StaffMember;
+use src\Model\Team;
+
+$db = new DatabaseManager($connexion);
+$staffMembers = $db->selectStaffMembers();
+
+// Ajouter un membre du staff
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $firstname = trim($_POST['firstname']);
+    $lastname = trim($_POST['lastname']);
+    $picture = trim($_POST['picture']);
+    $role = trim($_POST['role']);
+
+    if ($firstname && $lastname && $role) {
+        $stmt = $connexion->prepare("
+            INSERT INTO staff_member (first_name, last_name, picture, role)
+            VALUES (:firstname, :lastname, :picture, :role)
+        ");
+        $stmt->execute([
+            ':firstname' => $firstname,
+            ':lastname' => $lastname,
+            ':picture' => $picture,
+            ':role' => $role
+        ]);
+
+        $_SESSION['success'] = "Le membre du staff a été ajouté avec succès !";
         header("Location: " . $_SERVER['PHP_SELF']);
         exit;
+    } else {
+        $_SESSION['error'] = "Tous les champs obligatoires doivent être remplis.";
+    }
+}
 ?>
-<?php if (isset($_SESSION['success'])): ?>
-    <div class="success">
-        <?php
-        echo $_SESSION['success'];
-        unset($_SESSION['success']);
-        ?>
-    </div>
-<?php endif; ?>
 
-<form action="" method="post">
-    <p class="error"><?php echo isset($infos["errors"]["joueur"]) ? $infos["errors"]["joueur"] : "" ?></p>
-    <label for="select-player">Choisissez un joueur</label><br>
-    <select name="joueur" id="joueur">
-        <?php foreach ($players as $player) { ?>
-            <option value="<?= htmlspecialchars($player->getId()) ?>">
-                <?= htmlspecialchars($player->getFirstname() . " " . $player->getLastname()) ?>
-            </option>
-        <?php } ?>
-    </select><br><br>
+<!DOCTYPE html>
+<html lang="fr">
 
-    <p class="error"><?php echo isset($infos["errors"]["équipe"]) ? $infos["errors"]["équipe"] : "" ?></p>
-    <label for="select-team">Choisissez une équipe</label><br>
-    <select name="équipe" id="équipe">
-        <?php foreach ($teams as $team) { ?>
-            <option value="<?= htmlspecialchars($team->getId()) ?>">
-                <?= htmlspecialchars($team->getName()) ?>
-            </option>
-        <?php } ?>
-    </select><br><br>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Afficher le staff</title>
+    <link rel="stylesheet" href="includes/style.css?v=3">
+</head>
 
-    <p class="error"><?php echo isset($infos["errors"]["position"]) ? $infos["errors"]["position"] : "" ?></p>
-    <label for="select-type">Choisissez une position pour le joueur</label><br>
-    <select name="position" id="position">
-        <?php foreach ($types as $type) { ?>
-            <option value="<?= htmlspecialchars($type) ?>">
-                <?= htmlspecialchars($type) ?>
-            </option>
-        <?php } ?>
-    </select><br><br>
+<body>
 
-    <button type="submit">Ajouter à l'équipe</button>
-</form>
+    <h1>Infos du Staff</h1>
+
+    <?php if (isset($_SESSION['success'])): ?>
+        <div class="success"><?= $_SESSION['success'];
+        unset($_SESSION['success']); ?></div>
+    <?php endif; ?>
+    <?php if (isset($_SESSION['error'])): ?>
+        <div class="error"><?= $_SESSION['error'];
+        unset($_SESSION['error']); ?></div>
+    <?php endif; ?>
+
+    <?php if (empty($staffMembers)): ?>
+        <p>Aucun membre du staff n’a encore été ajouté.</p>
+    <?php else: ?>
+        <div class="staff-container">
+            <?php foreach ($staffMembers as $staff): ?>
+                <div class="staff">
+                    <h2><?= htmlspecialchars($staff->getFirstname() . " " . $staff->getLastname()) ?></h2>
+                    <?php if ($staff->getPicture()): ?>
+                        <img src="<?= htmlspecialchars($staff->getPicture()) ?>"
+                            alt="photo de <?= htmlspecialchars($staff->getFirstname()) ?>">
+                    <?php endif; ?>
+                    <p><strong>Rôle :</strong> <?= htmlspecialchars($staff->getRole()) ?></p>
+
+                    <!-- Liens d’action -->
+                    <a href="edit_staff.php?id=<?= urlencode($staff->getId()) ?>">Modifier</a> |
+                    <a href="delete_staff.php?id=<?= urlencode($staff->getId()) ?>"
+                        onclick="return confirm('Supprimer ce membre du staff ?');">Supprimer</a>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
+
+    <h2>Ajouter un membre du staff</h2>
+    <form action="" method="post" enctype="multipart/form-data" class="add-form">
+        <label>Prénom :</label><br>
+        <input type="text" name="firstname" required><br><br>
+
+        <label>Nom :</label><br>
+        <input type="text" name="lastname" required><br><br>
+
+        <label>Photo (URL) :</label><br>
+        <input type="text" name="picture"><br><br>
+
+        <label>Rôle :</label><br>
+        <select name="role" required>
+            <option value="">-- Choisir un rôle --</option>
+            <option value="Entraîneur principal">Entraîneur principal</option>
+            <option value="Adjoint">Adjoint</option>
+            <option value="Préparateur physique">Préparateur physique</option>
+            <option value="Médecin">Médecin</option>
+            <option value="Analyste vidéo">Analyste vidéo</option>
+        </select><br><br>
+
+        <button type="submit">Ajouter</button>
+    </form>
+
+</body>
+
+</html>
