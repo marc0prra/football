@@ -13,7 +13,7 @@ if (isset($_GET['id'])) {
     $allTeams = Team::selectTeams();
 }
 
-$roles = ["Entraîneur principal", "Adjoint", "Préparateur physique", "Médecin", "Analyste vidéo"];
+$roles = ["Entraîneur principal", "Adjoint", "Préparateur physique", "Médecin"];
 
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
     $infos = DatabaseManager::returnArray($_POST);
@@ -58,9 +58,6 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                 <label>Nom :</label><br>
                 <input type="text" name="lastname" value="<?= htmlspecialchars($staff->getLastname()) ?>"
                     required><br><br>
-
-                <label>Photo :</label><br>
-                <input type="text" name="picture" value="<?= htmlspecialchars($staff->getPicture()) ?>"><br><br>
 
                 <label>Rôle :</label><br>
                 <select name="role">
