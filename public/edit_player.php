@@ -99,8 +99,15 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
             <?php if (!empty($theTeamsName)): ?>
                 <ul>
                     <?php foreach ($theTeamsName as $key => $theTeam): ?>
-                        <li><?= htmlspecialchars($theTeam->getTeamName()) ?> : <?= htmlspecialchars($theTeam->getRole()) ?>
-                        </li>
+                        <form method="POST">
+                            <li class="row">
+                                <label for="selected_team"></label>
+                                <input type="text" name="selected_team" value="<?= htmlspecialchars($theTeam->getTeamName()) ?>" readonly>
+                                <label for="selected_team"></label>
+                                <input type="text" name="selected_team" value="<?= htmlspecialchars($theTeam->getRole()) ?>" readonly>
+                                <button type="submit">❌</button>
+                            </li>
+                        </form>
                     <?php endforeach; ?>
                 </ul>
             <?php else: ?>
