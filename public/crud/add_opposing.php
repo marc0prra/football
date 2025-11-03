@@ -24,10 +24,12 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     <div class="success">
         <?php
         echo $_SESSION['success'];
-    unset($_SESSION['success']);
-    ?>
+        unset($_SESSION['success']);
+        ?>
     </div>
 <?php endif; ?>
+
+<h1>Ajout d'une équipe opposée</h1>
 
 <form action="" method="post">
     <p class="error">

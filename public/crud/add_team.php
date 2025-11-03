@@ -14,6 +14,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 }
 ?>
 
+<h1>Ajout d'une équipe</h1>
+
 <form action="" method="post">
     <?php if (isset($errors)) {
         foreach ($errors as $error) {

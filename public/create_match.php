@@ -18,6 +18,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
 ?>
 
+<h1>Création d'un match</h1>
+
 <form action="" method="post">
     <div>
         <p class="error"><?php echo isset($infos["errors"]["joueur"]) ? $infos["errors"]["joueur"] : "" ?></p>
