@@ -1,8 +1,8 @@
 <?php
 
 namespace src\Model;
-use src\Model\PlayerRole;
 
+use src\Model\PlayerRole;
 
 class DatabaseManager
 {

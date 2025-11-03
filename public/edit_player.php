@@ -1,6 +1,7 @@
 <?php
 
 use src\Model\DatabaseManager;
+
 include_once("index.php");
 use src\Model\Player;
 use src\Model\Team;

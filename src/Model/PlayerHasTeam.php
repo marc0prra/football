@@ -1,6 +1,7 @@
 <?php
 
 namespace src\Model;
+
 use src\Model\PlayerRole;
 
 class PlayerHasTeam
@@ -49,7 +50,7 @@ class PlayerHasTeam
         $requeteInsertion->execute();
     }
 
-    static function selectTargetPlayerHasTeam(int $player_id, Player $player): array
+    public static function selectTargetPlayerHasTeam(int $player_id, Player $player): array
     {
         global $connexion;
 

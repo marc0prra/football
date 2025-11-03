@@ -70,7 +70,7 @@ class Player
         $this->picture = $picture;
     }
 
-    static function selectTargetPlayer(int $player_id): Player
+    public static function selectTargetPlayer(int $player_id): Player
     {
         global $connexion;
         $requeteSelection = $connexion->prepare(
@@ -92,7 +92,7 @@ class Player
         return $player;
     }
 
-    static function updatePlayer(Player $playerPost, string $player_id)
+    public static function updatePlayer(Player $playerPost, string $player_id)
     {
         global $connexion;
         $firstName = $playerPost->getFirstname();

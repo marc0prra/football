@@ -2,6 +2,7 @@
 include_once("../index.php");
 use src\Model\Team;
 use src\Model\DatabaseManager;
+
 // Vérifier qu'on est en POST
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $infos = DatabaseManager::returnArray($_POST);

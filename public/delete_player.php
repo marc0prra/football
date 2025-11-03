@@ -1,7 +1,9 @@
 <?php
+
 session_start();
 
 use src\Model\DatabaseManager;
+
 include_once("index.php");
 
 $id = $_POST['id'] ?? $_GET['id'] ?? null;

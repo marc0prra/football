@@ -62,35 +62,35 @@ foreach ($players as $player) {
             <?php
             // Affiche le club du joueur
             $teamName = "Aucun club";
-            $teamId = null;
-            foreach ($teams as $team) {
-                $req = $connexion->prepare("SELECT team_id FROM player_has_team WHERE player_id = :pid");
-                $req->execute([':pid' => $player->getId()]);
-                $link = $req->fetch(PDO::FETCH_ASSOC);
-                if ($link && $link['team_id'] == $team->getId()) {
-                    $teamName = $team->getName();
-                    $teamId = $team->getId();
-                    break;
-                }
+        $teamId = null;
+        foreach ($teams as $team) {
+            $req = $connexion->prepare("SELECT team_id FROM player_has_team WHERE player_id = :pid");
+            $req->execute([':pid' => $player->getId()]);
+            $link = $req->fetch(PDO::FETCH_ASSOC);
+            if ($link && $link['team_id'] == $team->getId()) {
+                $teamName = $team->getName();
+                $teamId = $team->getId();
+                break;
             }
-            ?>
+        }
+        ?>
             <p>Club : <?= htmlspecialchars($teamName) ?></p>
 
             <?php
-            // Affiche les matchs
-            if ($teamId) {
-                $matchs = $connexion->prepare("
+        // Affiche les matchs
+        if ($teamId) {
+            $matchs = $connexion->prepare("
                 SELECT m.date, m.team_score, m.opponent_score, oc.city
                 FROM matchs m
                 LEFT JOIN opposing_club oc ON oc.id = m.opposing_club_id
                 WHERE m.team_id = :tid
             ");
-                $matchs->execute([':tid' => $teamId]);
-                $listeMatchs = $matchs->fetchAll(PDO::FETCH_ASSOC);
-            } else {
-                $listeMatchs = [];
-            }
-            ?>
+            $matchs->execute([':tid' => $teamId]);
+            $listeMatchs = $matchs->fetchAll(PDO::FETCH_ASSOC);
+        } else {
+            $listeMatchs = [];
+        }
+        ?>
 
             <?php if (!empty($listeMatchs)): ?>
                 <h3>Matchs joués :</h3>
@@ -122,18 +122,18 @@ foreach ($players as $player) {
             </p>
 
             <?php
-            // Affiche le club du joueur
-            $teamName = "Aucun club";
-            foreach ($teams as $team) {
-                $req = $connexion->prepare("SELECT team_id FROM player_has_team WHERE player_id = :pid");
-                $req->execute([':pid' => $player->getId()]);
-                $link = $req->fetch(PDO::FETCH_ASSOC);
-                if ($link && $link['team_id'] == $team->getId()) {
-                    $teamName = $team->getName();
-                    break;
-                }
+        // Affiche le club du joueur
+        $teamName = "Aucun club";
+        foreach ($teams as $team) {
+            $req = $connexion->prepare("SELECT team_id FROM player_has_team WHERE player_id = :pid");
+            $req->execute([':pid' => $player->getId()]);
+            $link = $req->fetch(PDO::FETCH_ASSOC);
+            if ($link && $link['team_id'] == $team->getId()) {
+                $teamName = $team->getName();
+                break;
             }
-            ?>
+        }
+        ?>
             <p>Club : <?= htmlspecialchars($teamName) ?></p>
 
             <a href="edit_player.php?id=<?= urlencode($player->getId()) ?>">Modifier</a> |
