@@ -12,18 +12,16 @@ $staffMembers = $db->selectStaffMembers();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $firstname = trim($_POST['firstname']);
     $lastname = trim($_POST['lastname']);
-    $picture = trim($_POST['picture']);
     $role = trim($_POST['role']);
 
     if ($firstname && $lastname && $role) {
         $stmt = $connexion->prepare("
-            INSERT INTO staff_member (first_name, last_name, picture, role)
-            VALUES (:firstname, :lastname, :picture, :role)
+            INSERT INTO staff_member (first_name, last_name, role)
+            VALUES (:firstname, :lastname, :role)
         ");
         $stmt->execute([
             ':firstname' => $firstname,
             ':lastname' => $lastname,
-            ':picture' => $picture,
             ':role' => $role
         ]);
 
@@ -66,10 +64,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php foreach ($staffMembers as $staff): ?>
                 <div class="staff">
                     <h2><?= htmlspecialchars($staff->getFirstname() . " " . $staff->getLastname()) ?></h2>
-                    <?php if ($staff->getPicture()): ?>
-                        <img src="<?= htmlspecialchars($staff->getPicture()) ?>"
-                            alt="photo de <?= htmlspecialchars($staff->getFirstname()) ?>">
-                    <?php endif; ?>
                     <p><strong>Rôle :</strong> <?= htmlspecialchars($staff->getRole()) ?></p>
 
                     <!-- Liens d’action -->
