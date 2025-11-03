@@ -158,9 +158,6 @@ class DatabaseManager
         $stmt->execute([':id' => $id]);
         $data = $stmt->fetch(\PDO::FETCH_ASSOC);
 
-        if ($data) {
-            return new self($data['first_name'], $data['last_name'], $data['role'], $data['id']);
-        }
         return null;
     }
 

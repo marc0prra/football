@@ -83,12 +83,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <label>Nom :</label><br>
         <input type="text" name="lastname" required><br><br>
 
-        <label>Photo (URL) :</label><br>
-        <input type="text" name="picture"><br><br>
-
         <label>Rôle :</label><br>
         <select name="role" required>
-            <option value="">-- Choisir un rôle --</option>
+            <option value="">Choisir un rôle </option>
             <option value="Entraîneur principal">Entraîneur principal</option>
             <option value="Adjoint">Adjoint</option>
             <option value="Préparateur physique">Préparateur physique</option>
