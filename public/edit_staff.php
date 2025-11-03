@@ -5,19 +5,14 @@ use src\Model\Team;
 
 include_once("index.php");
 
-// --- Vérification de l'ID ---
 if (isset($_GET['id'])) {
     $staff_id = $_GET['id'];
 
-    // --- Récupération du membre du staff ---
     $staff = StaffMember::selectTargetStaff($staff_id);
 
-
-    // --- Récupération de toutes les équipes ---
     $allTeams = Team::selectTeams();
 }
 
-// --- Liste des rôles possibles ---
 $roles = ["Entraîneur principal", "Adjoint", "Préparateur physique", "Médecin", "Analyste vidéo"];
 
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
@@ -25,7 +20,6 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
     if (!isset($infos["errors"])) {
 
-        // --- Modifier les infos du staff ---
         if (isset($infos["firstname"])) {
             $staffPost = new StaffMember(
                 $infos["firstname"],
