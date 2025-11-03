@@ -1,0 +1,17 @@
+{
+    "name": "perei/football",
+    "autoload": {
+        "psr-4": {
+            "src\\Model\\": "src/Model/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Marco Pereira",
+            "email": "pereira.marco2006@gmail.com"
+        }
+    ],
+    "require": {
+        "monolog/monolog": "^3.9"
+    }
+}
