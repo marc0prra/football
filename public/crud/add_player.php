@@ -35,6 +35,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     </div>
 <?php endif; ?>
 
+<h1>Ajout d'un joueur</h1>
+
 <form action="" method="post">
     <p class="error"><?php echo isset($infos["errors"]["prenom"]) ? $infos["errors"]["prenom"] : "" ?></p>
     <label for="prenom">Prénom* :</label>

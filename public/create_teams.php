@@ -30,8 +30,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     <div class="success">
         <?php
         echo $_SESSION['success'];
-        unset($_SESSION['success']);
-        ?>
+    unset($_SESSION['success']);
+    ?>
     </div>
 <?php endif; ?>
 

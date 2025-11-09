@@ -144,7 +144,8 @@ a.button:hover {
 }
 
 /************************* infos_player *************************/
-.player {
+.player,
+.staff {
   background: #fff;
   border-radius: var(--radius);
   padding: 1.5rem;
@@ -152,7 +153,13 @@ a.button:hover {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
   transition: transform var(--transition), box-shadow var(--transition);
 }
+
 .player:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+}
+
+.staff:hover {
   transform: translateY(-4px);
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
 }
@@ -202,4 +209,14 @@ a.button:hover {
   transform: translateY(-2px);
   text-decoration: none;
   transition: 0.5s;
+}
+
+.inputMatch {
+  margin-right: 100px;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  margin-right: 30px;
 }

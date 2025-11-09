@@ -42,7 +42,7 @@ class OpposingClub
 
     }
 
-    static function selectClubs(): array
+    public static function selectClubs(): array
     {
         global $connexion;
         $requeteSelection = $connexion->prepare(

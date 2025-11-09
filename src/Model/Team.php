@@ -21,7 +21,7 @@ class Team
         return $this->name;
     }
 
-    static function selectTeams(): array
+    public static function selectTeams(): array
     {
         global $connexion;
         $requeteSelection = $connexion->prepare(
@@ -55,7 +55,7 @@ class Team
 
     }
 
-    static function selectTargetTeam(string $team_id):Team
+    public static function selectTargetTeam(string $team_id): Team
     {
         global $connexion;
         $requeteSelection = $connexion->prepare(

@@ -29,6 +29,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     </div>
 <?php endif; ?>
 
+<h1>Ajout d'une équipe opposée</h1>
+
 <form action="" method="post">
     <p class="error">
         <?php echo isset($infos["errors"]["ville"]) ? $infos["errors"]["ville"] : "" ?>

@@ -1,8 +1,8 @@
 <?php
 
 namespace src\Model;
-use src\Model\PlayerRole;
 
+use src\Model\PlayerRole;
 
 class DatabaseManager
 {
@@ -131,20 +131,50 @@ class DatabaseManager
         $requeteSelection->execute();
         $theStaffMembers = $requeteSelection->fetchAll(\PDO::FETCH_ASSOC);
 
-        $counter = 1;
-        $staffMembers = [];
+        $staffMembers = []; // tableau vide
 
         foreach ($theStaffMembers as $theStaffMember) {
-            $staffMembers[$counter] = new StaffMember(
-                $theStaffMember["id"],
-                $theStaffMember["first_name"],
-                $theStaffMember["last_name"],
-                $theStaffMember["picture"],
-                $theStaffMember["role"]
+            $staffMembers[] = new StaffMember(
+                $theStaffMember["first_name"],   // firstname
+                $theStaffMember["last_name"],    // lastname
+                $theStaffMember["picture"],      // picture
+                $theStaffMember["role"],         // role
+                (int) $theStaffMember["id"]       // id
             );
-            $counter++;
         }
+
         return $staffMembers;
+    }
+
+    public function deleteStaff(int $id): void
+    {
+        $requete = $this->connexion->prepare('DELETE FROM staff_member WHERE id = :id');
+        $requete->execute(['id' => $id]);
+    }
+    public static function selectTargetStaff(int $id)
+    {
+        global $connexion;
+        $stmt = $connexion->prepare("SELECT * FROM staff_member WHERE id = :id");
+        $stmt->execute([':id' => $id]);
+        $data = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        return null;
+    }
+
+    public static function updateStaff(StaffMember $staff, int $id)
+    {
+        global $connexion;
+        $stmt = $connexion->prepare("
+        UPDATE staff_member
+        SET first_name = :firstname, last_name = :lastname, role = :role
+        WHERE id = :id
+    ");
+        $stmt->execute([
+            ':firstname' => $staff->getFirstname(),
+            ':lastname' => $staff->getLastname(),
+            ':role' => $staff->getRole(),
+            ':id' => $id
+        ]);
     }
 
 }

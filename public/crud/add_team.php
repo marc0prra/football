@@ -2,6 +2,7 @@
 include_once("../index.php");
 use src\Model\Team;
 use src\Model\DatabaseManager;
+
 // Vérifier qu'on est en POST
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $infos = DatabaseManager::returnArray($_POST);
@@ -12,6 +13,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     }
 }
 ?>
+
+<h1>Ajout d'une équipe</h1>
 
 <form action="" method="post">
     <?php if (isset($errors)) {
