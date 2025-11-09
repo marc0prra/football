@@ -15,21 +15,21 @@ class Matchs
     private int $opposing_club_id;
 
     public function __construct(
-        ?int $id = null,
         int $teamScore = 0,
         int $opponentScore = 0,
         DateTime|string $date = "2000-01-01",
         int $team_id = 0,
         string $city = "",
-        int $opposing_club_id = 0
+        int $opposing_club_id = 0,
+        ?int $id = null
     ) {
-        $this->id = $id;
         $this->teamScore = $teamScore;
         $this->opponentScore = $opponentScore;
         $this->date = $date instanceof DateTime ? $date : new DateTime($date);
         $this->team_id = $team_id;
         $this->city = $city;
         $this->opposing_club_id = $opposing_club_id;
+        $this->id = $id;
     }
 
     // --- Getters ---
@@ -90,5 +90,27 @@ class Matchs
     public function setOpposingClubId(int $opposing_club_id): void
     {
         $this->opposing_club_id = $opposing_club_id;
+    }
+
+    public function insertMatch(): void
+    {
+        global $connexion;
+        $team_score = $this->getTeamScore();
+        $opponent_score = $this->getOpponentScore();
+        $date = $this->getDate()->format('Y-m-d');
+        $team_id = $this->getTeamId();
+        $city = $this->getCity();
+        $opposing_club_id = $this->getOpposingClubId(); 
+
+        $requeteInsertion = $connexion->prepare('INSERT INTO matchs (team_score, opponent_score, date, team_id, city, opposing_club_id) VALUES (:team_score, :opponent_score, :date, :team_id, :city, :opposing_club_id)');
+        $requeteInsertion->bindParam('team_score', $team_score);
+        $requeteInsertion->bindParam('opponent_score', $opponent_score);
+        $requeteInsertion->bindParam('date', $date);
+        $requeteInsertion->bindParam('team_id', $team_id);
+        $requeteInsertion->bindParam('city', $city);
+        $requeteInsertion->bindParam('opposing_club_id', $opposing_club_id);
+
+        $requeteInsertion->execute();
+
     }
 }

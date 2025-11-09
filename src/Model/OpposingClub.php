@@ -57,7 +57,8 @@ class OpposingClub
         foreach ($theClubs as $theClub) {
             $clubs[$counter] = new OpposingClub(
                 $theClub["adress"],
-                $theClub["city"]
+                $theClub["city"],
+                $theClub["id"]
             );
             $counter++;
         }

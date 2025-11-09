@@ -90,8 +90,9 @@ input[type="email"],
 input[type="password"],
 input[type="date"],
 textarea,
+input[type="number"],
 select {
-  width: 96%;
+  width: fit-content;
   padding: 0.8rem 1rem;
   border: 1px solid #ccc;
   border-radius: var(--radius);
