@@ -1,21 +1,15 @@
 {
-    "name": "perei/football",
-    "autoload": {
-        "psr-4": {
-            "src\\Model\\": "src/Model/"
-        }
-    },
+    "name": "admin/football",
     "authors": [
         {
-            "name": "Marco Pereira",
+            "name": "marc0prra",
             "email": "pereira.marco2006@gmail.com"
         }
     ],
-    "require": {
-        "monolog/monolog": "^3.9",
-        "nesbot/carbon": "^3.10"
-    },
-    "require-dev": {
-        "friendsofphp/php-cs-fixer": "^3.89"
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "src\\": "src/"
+        }
     }
 }
